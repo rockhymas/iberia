@@ -9,7 +9,7 @@
         {
             "taskName": "build",
             "args": ["build"],
-            "showOutput": "always",
+            "showOutput": "silent",
             "isBuildCommand": true
         },
         {
