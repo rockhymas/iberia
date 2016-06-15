@@ -4,9 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.material.Material;
 
-public class CompressedBlock extends BlockStone {
+public class BlockCompressedStone extends BlockStone {
 
-	public CompressedBlock() {
+	public BlockCompressedStone() {
 		super();
 	}
 }

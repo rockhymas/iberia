@@ -1,6 +1,7 @@
 package com.gibraltar.iberia.init;
 
 import com.gibraltar.iberia.Reference;
+import com.gibraltar.iberia.blocks.BlockCompressedStone;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStone;
@@ -15,7 +16,7 @@ public class blocks {
 	
 	public static void init() {
 		exposed_stone = (new BlockStone()).setHardness(1.5F).setResistance(10.0F).setUnlocalizedName("exposedstone");
-		compressed_stone = (new BlockStone()).setHardness(15F).setResistance(10.0F).setUnlocalizedName("compressedstone");
+		compressed_stone = (new BlockCompressedStone()).setHardness(15F).setResistance(10.0F).setUnlocalizedName("compressedstone");
 	}
 
 	public static void register() {
