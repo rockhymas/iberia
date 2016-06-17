@@ -9,6 +9,12 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
+
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 
 @Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.MOD_NAME)
 public class iberia
@@ -21,6 +27,7 @@ public class iberia
     {
     	blocks.init();
     	blocks.register();
+        MinecraftForge.EVENT_BUS.register(new blocks());
     }
     
     @EventHandler
