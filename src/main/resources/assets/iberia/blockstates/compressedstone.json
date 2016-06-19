@@ -1,5 +1,5 @@
 {
     "variants": {
-        "stone": { "model": "iberia:compressedstone" }
+        "variant=stone": { "model": "stone" }
     }
 }
