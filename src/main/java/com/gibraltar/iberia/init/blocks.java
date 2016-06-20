@@ -25,106 +25,88 @@ import net.minecraft.init.Blocks;
 
 public class blocks {
 	public static Block compressed_stone;
-	//public static Block exposed_stone;
 	
 	public static void init() {
-		//exposed_stone = (new BlockStone()).setHardness(1.5F).setResistance(10.0F).setUnlocalizedName("exposedstone");
 		compressed_stone = (new BlockCompressedStone()).setHardness(15F).setResistance(10.0F).setUnlocalizedName("compressedstone");
 	}
 
 	public static void register() {
-		//GameRegistry.registerBlock(exposed_stone, exposed_stone.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(compressed_stone, compressed_stone.getUnlocalizedName().substring(5));
 	}
 	
 	public static void registerRenders() {
-		//registerRender(exposed_stone);
 		registerRender(compressed_stone);
 	}
 	
 	public static void registerRender(Block block) {
-		Item item = Item.getItemFromBlock(block);
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), "inventory"));
 	}
 
     protected int updateLCG = (new Random()).nextInt();
 
-	// public static final IUnlistedProperty<boolboolean> CompressedProperty = new IUnlistedProperty<boolean>()
-	// {
-    //     public String getName() { return "iberia_compressed"; }
-    //     public boolean isValid(boolean state) { return true; }
-    //     public Class<boolean> getType() { return boolean.class; }
-    //     public String valueToString(boolean state) { return state.toString(); }
-    // };
+	private boolean compressingBlock(Block block)
+	{
+		return block == Blocks.stone || block == compressed_stone;
+	}
 
 	@SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
 		if (event.phase == TickEvent.Phase.START || event.side == Side.CLIENT)
 			return;
 
-		// int i = event.world.getGameRules().getInt("randomTickSpeed");
+		int i = event.world.getGameRules().getInt("randomTickSpeed");
 
-		// if (i > 0)
-		// {
-		// 	Iterator<Chunk> chunkIterator = ((WorldServer)event.world).getPlayerChunkManager().getChunkIterator();
-		// 	Iterator<Chunk> iterator = net.minecraftforge.common.ForgeChunkManager.getPersistentChunksIterableFor(event.world, chunkIterator);
+		if (i > 0)
+		{
+			Iterator<Chunk> chunkIterator = ((WorldServer)event.world).getPlayerChunkManager().getChunkIterator();
+			Iterator<Chunk> iterator = net.minecraftforge.common.ForgeChunkManager.getPersistentChunksIterableFor(event.world, chunkIterator);
 
-		// 	while (iterator.hasNext())
-		// 	{
-		// 		Chunk chunk = (Chunk)iterator.next();
-		// 		int j = chunk.xPosition * 16;
-		// 		int k = chunk.zPosition * 16;
-		// 		for (ExtendedBlockStorage extendedblockstorage : chunk.getBlockStorageArray())
-		// 		{
-		// 			if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
-		// 			{
-		// 				for (int i1 = 0; i1 < i; ++i1)
-		// 				{
-		// 					this.updateLCG = this.updateLCG * 3 + 1013904223;
-		// 					int j1 = this.updateLCG >> 2;
-		// 					int k1 = j1 & 15;
-		// 					int l1 = j1 >> 8 & 15;
-		// 					int i2 = j1 >> 16 & 15;
-		// 					System.out.println("k1 >> " + k1 + ", i2 >> " + i2 + ", l1 >> " + l1);
-		// 					IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
-		// 					Block block = iblockstate.getBlock();
+			while (iterator.hasNext())
+			{
+				Chunk chunk = (Chunk)iterator.next();
+				int j = chunk.xPosition * 16;
+				int k = chunk.zPosition * 16;
+				for (ExtendedBlockStorage extendedblockstorage : chunk.getBlockStorageArray())
+				{
+					if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE && !extendedblockstorage.isEmpty())
+					{
+						for (int i1 = 0; i1 < i; ++i1)
+						{
+							this.updateLCG = this.updateLCG * 3 + 1013904223;
+							int j1 = this.updateLCG >> 2;
+							int k1 = j1 & 15;
+							int l1 = j1 >> 8 & 15;
+							int i2 = j1 >> 16 & 15;
+							IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
+							Block block = iblockstate.getBlock();
 
-		// 					if (block == Blocks.stone)
-		// 					{
-		// 						BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
-		// 						System.out.println("Position >> " + pos);
-		// 						// Get compressed value
-		// 						bool compressed = false;
-		// 						if (iblockstate instanceof IExtendedBlockState)
-		// 						{
-		// 							if(((IExtendedBlockState)iblockstate).getUnlistedNames().contains(CompressedProperty))
-		// 							{
-		// 								compressed = ((IExtendedBlockState)iblockstate).getValue(CompressedProperty);
-		// 							}
-		// 						}
+							if (block == Blocks.stone || block == compressed_stone)
+							{
+								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
+								boolean compressed = block == compressed_stone;
 
-		// 						bool shouldBeCompressed = true;
-		// 						if (extendedblockstorage.get(k1-1, i2, l1).getBlock() != Blocks.stone ||
-		// 							extendedblockstorage.get(k1+1, i2, l1).getBlock() != Blocks.stone ||
-		// 							extendedblockstorage.get(k1, i2-1, l1).getBlock() != Blocks.stone ||
-		// 							extendedblockstorage.get(k1, i2+1, l1).getBlock() != Blocks.stone ||
-		// 							extendedblockstorage.get(k1, i2, l1-1).getBlock() != Blocks.stone ||
-		// 							extendedblockstorage.get(k1, i2, l1+1).getBlock() != Blocks.stone)
-		// 						{
-		// 							shouldBeCompressed = false;
-		// 						}
+								boolean shouldBeCompressed = true;
+								if (!compressingBlock(event.world.getBlockState(pos.up()).getBlock()) ||
+									!compressingBlock(event.world.getBlockState(pos.down()).getBlock()) ||
+									!compressingBlock(event.world.getBlockState(pos.north()).getBlock()) ||
+									!compressingBlock(event.world.getBlockState(pos.south()).getBlock()) ||
+									!compressingBlock(event.world.getBlockState(pos.east()).getBlock()) ||
+									!compressingBlock(event.world.getBlockState(pos.west()).getBlock()))
+								{
+									shouldBeCompressed = false;
+								}
 
-		// 						// if (compressed != shouldBeCompressed)
-		// 						// {
-		// 						// 	extendedblockstorage.set(k1, i2, l1, )
-		// 						// }
-		// 						//block.randomTick(this, new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k), iblockstate, this.rand);
-		// 						// Update extended properties based on surrounding blocks and random value
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
+								//System.out.println("Position: " + pos + ", compressed: " + compressed + ", should be: " + shouldBeCompressed);
+								if (compressed != shouldBeCompressed)
+								{
+									Block newBlock = shouldBeCompressed ? compressed_stone : Blocks.stone;
+									//System.out.println("Making " + block.getUnlocalizedName() + " into " + newBlock.getUnlocalizedName());
+									event.world.setBlockState(pos, newBlock.getStateFromMeta(block.getMetaFromState(iblockstate)), 6 /*no block update, no re-render*/);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
     }
 }
