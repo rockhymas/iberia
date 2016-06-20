@@ -35,12 +35,10 @@ public class blocks {
 	}
 	
 	public static void registerRenders() {
-		registerRender(compressed_stone);
+		// compressed stone has no associated items
 	}
 	
-	public static void registerRender(Block block) {
-	}
-
+	
     protected int updateLCG = (new Random()).nextInt();
 
 	private boolean compressingBlock(Block block)
@@ -95,11 +93,9 @@ public class blocks {
 									shouldBeCompressed = false;
 								}
 
-								//System.out.println("Position: " + pos + ", compressed: " + compressed + ", should be: " + shouldBeCompressed);
 								if (compressed != shouldBeCompressed)
 								{
 									Block newBlock = shouldBeCompressed ? compressed_stone : Blocks.stone;
-									//System.out.println("Making " + block.getUnlocalizedName() + " into " + newBlock.getUnlocalizedName());
 									event.world.setBlockState(pos, newBlock.getStateFromMeta(block.getMetaFromState(iblockstate)), 6 /*no block update, no re-render*/);
 								}
 							}
