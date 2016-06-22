@@ -1,7 +1,0 @@
-{
-    "variants": {
-        "variant" : {
-            "stone": { "model": "iberia:exposedstone" }
-        }
-    }
-}
