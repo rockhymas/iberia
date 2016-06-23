@@ -4,8 +4,9 @@
         "variant=andesite": { "model": "andesite" },
         "variant=diorite": { "model": "diorite" },
         "variant=granite": { "model": "granite" },
-        "variant=smooth_andesite": { "model": "smooth_andesite" },
-        "variant=smooth_diorite": { "model": "smooth_diorite" },
-        "variant=smooth_granite": { "model": "smooth_granite" }
+        "variant=smooth_andesite": { "model": "andesite_smooth" },
+        "variant=smooth_diorite": { "model": "diorite_smooth" },
+        "variant=smooth_granite": { "model": "granite_smooth" },
+        "inventory": { "model": "stone" }
     }
 }
