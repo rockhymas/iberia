@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Java",
+            "type": "java",
+            "jdkPath": "C:\\Program Files\\Java\\jdk1.8.0_91\\bin",
+            "request": "launch",
+            "stopOnEntry": true,
+            "cwd": "${fileDirname}",
+            "startupClass": "GradleStart",
+            "options": [
+                "-Xincgc",
+                "-Xmx1024M",
+                "-Xms1024M"
+            ]
+        }
+    ]
+}
