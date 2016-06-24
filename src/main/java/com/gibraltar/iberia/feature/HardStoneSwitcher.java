@@ -1,8 +1,8 @@
-package com.gibraltar.iberia.init;
+package com.gibraltar.iberia.feature;
 
 import com.gibraltar.iberia.Reference;
 import com.gibraltar.iberia.blocks.BlockHardStone;
-import com.gibraltar.iberia.init.HardStoneFeature;
+import com.gibraltar.iberia.feature.HardStoneFeature;
 
 import java.util.Iterator;
 import java.util.Random;

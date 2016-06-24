@@ -1,10 +1,7 @@
-package com.gibraltar.iberia.init;
+package com.gibraltar.iberia.feature;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.Reference;
-
-import java.util.Iterator;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
