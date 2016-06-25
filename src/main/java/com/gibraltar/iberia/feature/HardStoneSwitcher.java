@@ -34,13 +34,13 @@ public class HardStoneSwitcher {
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
 		ItemStack heldItem = event.getEntityPlayer().getHeldItemMainhand();
-		if ((heldItem != null && heldItem.getItem() == Items.diamond_pickaxe) && event.getState().getBlock() == HardStoneFeature.hard_stone) {
+		if ((heldItem != null && heldItem.getItem() == Items.DIAMOND_PICKAXE) && event.getState().getBlock() == HardStoneFeature.hard_stone) {
 			event.setNewSpeed(event.getOriginalSpeed() * BlockHardStone.HARDNESS_MULTIPLE);
 		}
 	}
 
 	private boolean isCompressingBlock(Block block) {
-		return block == Blocks.stone || block == HardStoneFeature.hard_stone || block == Blocks.bedrock || block == Blocks.dirt;
+		return block == Blocks.STONE || block == HardStoneFeature.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT;
 	}
 
 	private boolean isSurroundedByCompressingBlocks(World world, BlockPos pos)
@@ -63,7 +63,7 @@ public class HardStoneSwitcher {
 
 		if (i > 0)
 		{
-			Iterator<Chunk> chunkIterator = ((WorldServer)event.world).getPlayerChunkManager().getChunkIterator();
+			Iterator<Chunk> chunkIterator = ((WorldServer)event.world).getPlayerChunkMap().getChunkIterator();
 			Iterator<Chunk> iterator = net.minecraftforge.common.ForgeChunkManager.getPersistentChunksIterableFor(event.world, chunkIterator);
 
 			// The following loop mimics the built in random tick loop to provide random ticks for stone and hard stone blocks
@@ -86,7 +86,7 @@ public class HardStoneSwitcher {
 							IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
 							Block block = iblockstate.getBlock();
 
-							if (block == Blocks.stone || block == HardStoneFeature.hard_stone)
+							if (block == Blocks.STONE || block == HardStoneFeature.hard_stone)
 							{
 								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
 								boolean hard = block == HardStoneFeature.hard_stone;
@@ -94,7 +94,7 @@ public class HardStoneSwitcher {
 
 								if (hard != shouldBeHard)
 								{
-									Block newBlock = shouldBeHard ? HardStoneFeature.hard_stone : Blocks.stone;
+									Block newBlock = shouldBeHard ? HardStoneFeature.hard_stone : Blocks.STONE;
 									event.world.setBlockState(pos, newBlock.getStateFromMeta(block.getMetaFromState(iblockstate)), 6 /*no block update, no re-render*/);
 								}
 							}

@@ -21,7 +21,7 @@ public class BlockHardStone extends BlockStone {
 	@Override
     protected ItemStack createStackedBlock(IBlockState state)
     {
-        Item item = Item.getItemFromBlock(Blocks.stone);
+        Item item = Item.getItemFromBlock(Blocks.STONE);
 
         if (item == null)
         {
