@@ -1,7 +1,5 @@
-Iberia Minecraft Mod
+Iberia: Minecraft Made Harder
 ====================
-
-Mining made harder.
 
 Challenges
 ----------
