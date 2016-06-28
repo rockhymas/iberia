@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,8 @@ public class HardStoneSwitcher {
 	}
 
 	private boolean isCompressingBlock(Block block) {
-		return block == Blocks.STONE || block == HardStoneFeature.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT;
+		return block == Blocks.STONE || block == HardStoneFeature.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT ||
+			(block instanceof BlockOre);
 	}
 
 	private boolean isSurroundedByCompressingBlocks(World world, BlockPos pos)
