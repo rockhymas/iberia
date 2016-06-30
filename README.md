@@ -15,6 +15,8 @@ Once a block of stone has been surrounded by compressing blocks, it will convert
 about the same time as it takes for wheat to grow one stage. Likewise, hard stone will convert
 back to stone after it's been un-surrounded in the same amount of time. 
 
+![alt text](http://i.imgur.com/6pQIopg.gifv "Hard Stone")
+
 *How do I deal with it?*
 
 In the early game, you'll need to go caving for stone and for ores. Mining is just going to take
