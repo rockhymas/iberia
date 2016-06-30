@@ -22,21 +22,6 @@ back to stone after it's been un-surrounded in the same amount of time.
 In the early game, you'll need to go caving for stone and for ores. Mining is just going to take
 too long. In the later game, your diamond pickaxe will open up the ability to do branch mining.
 
-### Reduced Debug Info
-
-*What is it?*
-
-Reduced debug info is a game rule that turns off "cheaty" info on the debug screen. So, with this
-on, you won't be able to find your location, the direction you are facing, the biome you're in, 
-the light level, the local difficulty, or what you're looking at from the F3 debug screen. 
-
-*How do I deal with it?*
-
-You're going to need to use in-game tools for keeping track of where you are, and getting around.
-Maps, compasses, and markers that you build in your world are all tools for knowing where you are
-and where you are headed. The sun can be used to find your direction. You're on your own to be
-careful about light levels and local difficulty.
-
 ### Sleep to Heal
 
 *What is it?*
@@ -53,3 +38,18 @@ Without natural regeneration, in the early game you can make sure you're well fe
 through the night to recover from injuries. You'll still want to be very careful not to get hurt,
 because losing half your hearts will require a full 50 minutes of gameplay (plus food and a bed)
 to recover back to full health. 
+
+### Reduced Debug Info
+
+*What is it?*
+
+Reduced debug info is a game rule that turns off "cheaty" info on the debug screen. So, with this
+on, you won't be able to find your location, the direction you are facing, the biome you're in, 
+the light level, the local difficulty, or what you're looking at from the F3 debug screen. 
+
+*How do I deal with it?*
+
+You're going to need to use in-game tools for keeping track of where you are, and getting around.
+Maps, compasses, and markers that you build in your world are all tools for knowing where you are
+and where you are headed. The sun can be used to find your direction. You're on your own to be
+careful about light levels and local difficulty.
