@@ -17,8 +17,6 @@ back to stone after it's been un-surrounded in the same amount of time.
 
 [See it in action](http://imgur.com/6pQIopg)
 
-<video controls="" autoplay="" name="media"><source src="https://zippy.gfycat.com/HealthyIdolizedChrysalis.webm" type="video/webm"></video>
-
 *How do I deal with it?*
 
 In the early game, you'll need to go caving for stone and for ores. Mining is just going to take
