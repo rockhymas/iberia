@@ -15,7 +15,7 @@ Once a block of stone has been surrounded by compressing blocks, it will convert
 about the same time as it takes for wheat to grow one stage. Likewise, hard stone will convert
 back to stone after it's been un-surrounded in the same amount of time. 
 
-[See it in action](http://imgur.com/6pQIopg)
+[See it in action](http://imgur.com/a/9ognN)
 
 *How do I deal with it?*
 
