@@ -16,6 +16,7 @@ about the same time as it takes for wheat to grow one stage. Likewise, hard ston
 back to stone after it's been un-surrounded in the same amount of time. 
 
 [See it in action](http://imgur.com/6pQIopg)
+![alt text](http://im2.ezgif.com/tmp/ezgif-2512484847.gif "Hard Stone")
 
 *How do I deal with it?*
 
