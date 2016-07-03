@@ -32,6 +32,8 @@ apple or make potions of healing. "Sleep to heal" allows you to slowly recover f
 sleeping. Each time you sleep and wake naturally, you can heal up to one heart as long as you are
 not hungry at all.
 
+[See it in action](http://imgur.com/a/i01Xy)
+
 *How do I deal with it?*
 
 Without natural regeneration, in the early game you can make sure you're well fed, and then sleep
@@ -46,6 +48,8 @@ to recover back to full health.
 Reduced debug info is a game rule that turns off "cheaty" info on the debug screen. So, with this
 on, you won't be able to find your location, the direction you are facing, the biome you're in, 
 the light level, the local difficulty, or what you're looking at from the F3 debug screen. 
+
+[See it in action](https://imgur.com/a/6irIP)
 
 *How do I deal with it?*
 
