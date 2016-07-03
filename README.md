@@ -1,6 +1,10 @@
 Iberia: Minecraft Made Harder
 ====================
 
+The philosophy of Iberia is to make Minecraft harder in ways that respect the vanilla Minecraft
+experience, enhance gameplay, encourage more experiences that are available in the game, and add
+a dose of reality without making it too grind-y.
+
 Challenges
 ----------
 
