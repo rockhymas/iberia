@@ -45,6 +45,24 @@ through the night to recover from injuries. You'll still want to be very careful
 because losing half your hearts will require a full 50 minutes of gameplay (plus food and a bed)
 to recover back to full health. 
 
+### Slow Crafting When Armored
+
+*What is it?*
+
+When wearing armor, your access to chests, crafting tables, enchanting tables, furnaces,
+dispensers, hoppers, droppers, potion stands, and beacons will be slowed down. The slowdown is a
+delay that shows up when first accessing the object. The slowdown is greatest with full diamond
+armor, and non-existent with no armor. While waiting for access, you can still cancel out by
+pressing ESC.
+
+*How do I deal with it?*
+
+The best way to deal with it is to wear no armor or light armor when doing lots of crafting work.
+This encourages protecting the areas where you will be doing crafting with barriers and lighting.
+It also means you'll want to easily put on and take off armor. To allow for that, you can now hold
+down SHIFT while right clicking an armor stand to swap the armor on the stand with the armor that
+you are wearing.
+
 ### Reduced Debug Info
 
 *What is it?*
