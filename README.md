@@ -55,6 +55,8 @@ delay that shows up when first accessing the object. The slowdown is greatest wi
 armor, and non-existent with no armor. While waiting for access, you can still cancel out by
 pressing ESC.
 
+[See it in action](http://imgur.com/a/XmePE)
+
 *How do I deal with it?*
 
 The best way to deal with it is to wear no armor or light armor when doing lots of crafting work.
