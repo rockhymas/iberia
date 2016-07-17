@@ -28,6 +28,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.client.gui.GuiHopper;
+import net.minecraft.client.gui.inventory.GuiBeacon;
+import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
 
 public class SlowGuiAccessFeature {
 	private long timeGuiOpened;
@@ -40,23 +44,19 @@ public class SlowGuiAccessFeature {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-	    if (event.getGui() instanceof GuiContainer && !(event.getGui() instanceof InventoryEffectRenderer)) {
+	    if (isSlowGui(event.getGui())) {
 			timeGuiOpened = Minecraft.getSystemTime();
 			Iterable<ItemStack> armorInventory = Minecraft.getMinecraft().thePlayer.getArmorInventoryList();
 			armorDelayMs = 0;
 
-			for (Object item : armorInventory)
-            {
+			for (Object item : armorInventory) {
                 ItemStack stack = (ItemStack) item;
-                if (stack == null)
-                {
+                if (stack == null) {
                     continue;
                 }
-				if (stack.getItem() instanceof ItemArmor)
-                {
+				if (stack.getItem() instanceof ItemArmor) {
                     ItemArmor armor = (ItemArmor)stack.getItem();
-					switch (armor.getArmorMaterial())
-					{
+					switch (armor.getArmorMaterial()) {
 						case LEATHER:
 							armorDelayMs += 200;
 							break;
@@ -82,7 +82,7 @@ public class SlowGuiAccessFeature {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-	    if (event.getGui() instanceof GuiContainer && !(event.getGui() instanceof InventoryEffectRenderer)) {
+	    if (isSlowGui(event.getGui())) {
 			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
 				double visibility = (Minecraft.getSystemTime() - timeGuiOpened) / (double)armorDelayMs;
 				int alpha = (int)Math.round(64.0D - visibility * 64.0D);
@@ -96,11 +96,15 @@ public class SlowGuiAccessFeature {
                 VertexBuffer vertexbuffer = tessellator.getBuffer();
 				int guiWidth = event.getGui().width;
 				int guiHeight = event.getGui().height;
-                int guiLeft = (guiWidth - 176) / 2;
-				int guiTop = (guiHeight - 166) / 2;
-				this.draw(vertexbuffer, guiLeft, guiTop, 176, 166, 255, 255, 255, 128);
-				this.draw(vertexbuffer, guiLeft+80, guiTop+80, 16, 2, 0, 0, 0, 128);
-				this.draw(vertexbuffer, guiLeft+80, guiTop+80, (int)Math.round(16.0D * visibility), 2, 255, 255, 255, 255);
+				int guiDrawnHeight = guiDrawnHeight(event.getGui());
+				int guiDrawnWidth = guiDrawnWidth(event.getGui());
+                int guiLeft = (guiWidth - guiDrawnWidth) / 2;
+				int guiTop = (guiHeight - guiDrawnHeight) / 2;
+				this.draw(vertexbuffer, guiLeft, guiTop, guiDrawnWidth, guiDrawnHeight, 255, 255, 255, 128);
+				int guiProgressLeft = guiLeft + (guiDrawnWidth - 16) / 2;
+				int guiProgressTop = guiTop + (guiDrawnHeight - 86);
+				this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, 16, 2, 0, 0, 0, 128);
+				this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, (int)Math.round(16.0D * visibility), 2, 255, 255, 255, 255);
 
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();
@@ -109,8 +113,33 @@ public class SlowGuiAccessFeature {
 	    }
 	}
 
-    private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
-    {
+	private boolean isSlowGui(GuiScreen gui) {
+		return gui instanceof GuiContainer &&
+			!(gui instanceof InventoryEffectRenderer) &&
+			!(gui instanceof GuiMerchant) &&
+			!(gui instanceof GuiScreenHorseInventory);
+	}
+
+	private int guiDrawnHeight(GuiScreen gui) {
+		if (gui instanceof GuiHopper) {
+			return 133;
+		}
+		if (gui instanceof GuiBeacon) {
+			return 219;
+		}
+
+		return 166;
+	}
+
+	private int guiDrawnWidth(GuiScreen gui) {
+		if (gui instanceof GuiBeacon) {
+			return 230;
+		}
+
+		return 176;
+	}
+
+    private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
         renderer.pos((double)(x + 0), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
@@ -122,7 +151,7 @@ public class SlowGuiAccessFeature {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
-	    if (event.getGui() instanceof GuiContainer && !(event.getGui() instanceof InventoryEffectRenderer)) {
+	    if (isSlowGui(event.getGui())) {
 			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
 				event.setCanceled(true);
 			}
@@ -132,7 +161,7 @@ public class SlowGuiAccessFeature {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onKeyboardInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-	    if (event.getGui() instanceof GuiContainer && !(event.getGui() instanceof InventoryEffectRenderer)) {
+	    if (isSlowGui(event.getGui())) {
 			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime() && (Keyboard.getEventKey() != 1)) {
 				event.setCanceled(true);
 			}
