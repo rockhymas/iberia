@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemElytra;
 
 public class QuickArmorSwapFeature {
 	public static void init() {
@@ -36,11 +37,8 @@ public class QuickArmorSwapFeature {
                 event.setCanceled(true);
                 EntityPlayer player = event.getEntityPlayer();
                 for (EntityEquipmentSlot slot : slotsToSwap) {
-                    System.out.println("slot " + slot);
                     ItemStack playerItem = player.getItemStackFromSlot(slot);
                     ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
-                    System.out.println("player " + playerItem);
-                    System.out.println("armor stand " + armorStandItem);
                     player.setItemStackToSlot(slot, armorStandItem);
                     armorStand.setItemStackToSlot(slot, playerItem);
                 }
