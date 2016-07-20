@@ -63,7 +63,7 @@ The best way to deal with it is to wear no armor or light armor when doing lots 
 This encourages protecting the areas where you will be doing crafting with barriers and lighting.
 It also means you'll want to easily put on and take off armor. To allow for that, you can now hold
 down SHIFT while right clicking an armor stand to swap the armor on the stand with the armor that
-you are wearing.
+you are wearing. As an dded bonus, quick armor swapping can put elytra on an armor stand.
 
 ### Reduced Debug Info
 
