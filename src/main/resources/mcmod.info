@@ -2,13 +2,13 @@
 {
   "modid": "iberia",
   "name": "Iberia",
-  "description": "Making mining harder.",
+  "description": "Minecraft Made Harder",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
   "authorList": ["gibraltar"],
-  "credits": "The Forge and FML guys, for making Minecraft mods possible",
+  "credits": "The Forge and FML guys, for making Minecraft mods possible. Vazkii for Quark, which made this mod possible.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
