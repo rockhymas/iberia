@@ -35,7 +35,8 @@ public class HardStoneSwitcher {
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
 		ItemStack heldItem = event.getEntityPlayer().getHeldItemMainhand();
-		if ((heldItem != null && heldItem.getItem() == Items.DIAMOND_PICKAXE) && event.getState().getBlock() == HardStoneFeature.hard_stone) {
+		if (heldItem != null && (heldItem.getItem() == Items.DIAMOND_PICKAXE || heldItem.getItem() == Items.GOLDEN_PICKAXE)  &&
+			event.getState().getBlock() == HardStoneFeature.hard_stone) {
 			event.setNewSpeed(event.getOriginalSpeed() * BlockHardStone.HARDNESS_MULTIPLE);
 		}
 	}
