@@ -1,8 +1,11 @@
 package com.gibraltar.iberia.proxy;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
-import com.gibraltar.iberia.feature.HardStoneFeature;
+import com.gibraltar.iberia.challenge.Challenge;
+import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.feature.ReducedDebugInfoFeature;
 import com.gibraltar.iberia.feature.SleepToHealFeature;
 import com.gibraltar.iberia.feature.SlowGuiAccessFeature;
@@ -17,6 +20,7 @@ import net.minecraftforge.common.config.Property;
 public class CommonProxy {
 	public static Configuration config;
 	public static File configFile;
+    private ArrayList challenges;
 
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -25,14 +29,27 @@ public class CommonProxy {
 		config = new Configuration(configFile);
 		config.load();
 
-        Property prop = config.get("features", "Hard Stone", true);
-        boolean enabled = prop.getBoolean(true);
-        if (enabled) {
-    	    HardStoneFeature.init();
+        challenges = new ArrayList();
+        challenges.add(new HardStoneChallenge());
+        // challenges.add(new SleepToHealChallenge());
+        // challenges.add(new ArmorSlowsCraftingChallenge());
+        // challenges.add(new ReducedDebugInfoChallenge());
+
+        forEachChallenge(challenge -> challenge.loadConfig(config));
+
+        if (config.hasChanged()) {
+            config.save();
         }
 
-        prop = config.get("features", "Reduced Debug Info", true);
-        enabled = prop.getBoolean(true);
+        forEachChallenge(challenge -> {
+            if (challenge.enabled) {
+                challenge.preInit(event);
+            }
+        });
+
+
+        Property prop = config.get("features", "Reduced Debug Info", true);
+        boolean enabled = prop.getBoolean(true);
         if (enabled) {
             ReducedDebugInfoFeature.init();
         }
@@ -66,5 +83,14 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event)
     {
+        forEachChallenge(challenge -> {
+            if (challenge.enabled) {
+                challenge.init(event);
+            }
+        });
+    }
+
+    private void forEachChallenge(Consumer<Challenge> action) {
+	    challenges.forEach(action);
     }
 }

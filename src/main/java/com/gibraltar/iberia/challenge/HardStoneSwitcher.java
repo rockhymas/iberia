@@ -1,8 +1,4 @@
-package com.gibraltar.iberia.feature;
-
-import com.gibraltar.iberia.Reference;
-import com.gibraltar.iberia.blocks.BlockHardStone;
-import com.gibraltar.iberia.feature.HardStoneFeature;
+package com.gibraltar.iberia.challenge;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -11,8 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -26,8 +20,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+
+import com.gibraltar.iberia.blocks.BlockHardStone;
+import com.gibraltar.iberia.challenge.HardStoneChallenge;
 
 public class HardStoneSwitcher {
     protected int updateLCG = (new Random()).nextInt();
@@ -36,13 +32,13 @@ public class HardStoneSwitcher {
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
 		ItemStack heldItem = event.getEntityPlayer().getHeldItemMainhand();
 		if (heldItem != null && (heldItem.getItem() == Items.DIAMOND_PICKAXE || heldItem.getItem() == Items.GOLDEN_PICKAXE)  &&
-			event.getState().getBlock() == HardStoneFeature.hard_stone) {
+			event.getState().getBlock() == HardStoneChallenge.hard_stone) {
 			event.setNewSpeed(event.getOriginalSpeed() * BlockHardStone.HARDNESS_MULTIPLE);
 		}
 	}
 
 	private boolean isCompressingBlock(Block block) {
-		return block == Blocks.STONE || block == HardStoneFeature.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT ||
+		return block == Blocks.STONE || block == HardStoneChallenge.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT ||
 			(block instanceof BlockOre);
 	}
 
@@ -89,15 +85,15 @@ public class HardStoneSwitcher {
 							IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
 							Block block = iblockstate.getBlock();
 
-							if (block == Blocks.STONE || block == HardStoneFeature.hard_stone)
+							if (block == Blocks.STONE || block == HardStoneChallenge.hard_stone)
 							{
 								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
-								boolean hard = block == HardStoneFeature.hard_stone;
+								boolean hard = block == HardStoneChallenge.hard_stone;
 								boolean shouldBeHard = isSurroundedByCompressingBlocks(event.world, pos);
 
 								if (hard != shouldBeHard)
 								{
-									Block newBlock = shouldBeHard ? HardStoneFeature.hard_stone : Blocks.STONE;
+									Block newBlock = shouldBeHard ? HardStoneChallenge.hard_stone : Blocks.STONE;
 									event.world.setBlockState(pos, newBlock.getStateFromMeta(block.getMetaFromState(iblockstate)), 6 /*no block update, no re-render*/);
 								}
 							}
