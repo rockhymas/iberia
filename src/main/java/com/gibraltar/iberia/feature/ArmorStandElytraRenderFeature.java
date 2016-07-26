@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraft.entity.item.EntityArmorStand;
 
 public class ArmorStandElytraRenderFeature {	
-	public static void init() {
+    public static void init() {
         RenderingRegistry.registerEntityRenderingHandler(EntityArmorStand.class, new RenderArmorStandFactory());
-	}
+    }
 }

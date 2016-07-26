@@ -8,7 +8,7 @@ import com.gibraltar.iberia.challenge.Challenge;
 import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.challenge.ReducedDebugInfoChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
-import com.gibraltar.iberia.feature.SlowGuiAccessFeature;
+import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
 import com.gibraltar.iberia.feature.QuickArmorSwapFeature;
 import com.gibraltar.iberia.feature.ArmorStandElytraRenderFeature;
 
@@ -32,7 +32,7 @@ public class CommonProxy {
         challenges = new ArrayList();
         challenges.add(new HardStoneChallenge());
         challenges.add(new SleepToHealChallenge());
-        // challenges.add(new ArmorSlowsCraftingChallenge());
+        challenges.add(new ArmorSlowsCraftingChallenge());
         challenges.add(new ReducedDebugInfoChallenge());
 
         forEachChallenge(challenge -> challenge.loadConfig(config));
@@ -49,14 +49,8 @@ public class CommonProxy {
 
 
 
-        Property prop = config.get("features", "Slow Gui Access", true);
+        Property prop = config.get("features", "Quick Armor Swap", true);
         boolean enabled = prop.getBoolean(true);
-        if (enabled) {
-            SlowGuiAccessFeature.init();
-        }
-
-        prop = config.get("features", "Quick Armor Swap", true);
-        enabled = prop.getBoolean(true);
         if (enabled) {
             QuickArmorSwapFeature.init();
         }

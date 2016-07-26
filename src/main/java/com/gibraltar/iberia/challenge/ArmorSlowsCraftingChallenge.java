@@ -1,45 +1,69 @@
-package com.gibraltar.iberia.feature;
+package com.gibraltar.iberia.challenge;
+
+import java.io.IOException;
+import java.util.List;
+import org.lwjgl.input.Keyboard;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiHopper;
+import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiBeacon;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.Reference;
 
-import net.minecraft.block.Block;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.InventoryEffectRenderer;
-import java.io.IOException;
-import java.util.List;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import org.lwjgl.input.Keyboard;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.client.gui.GuiMerchant;
-import net.minecraft.client.gui.GuiHopper;
-import net.minecraft.client.gui.inventory.GuiBeacon;
-import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
-
-public class SlowGuiAccessFeature {
+public class ArmorSlowsCraftingChallenge extends Challenge {
 	private long timeGuiOpened;
 	private long armorDelayMs;
+	private int leatherDelay;
+	private int ironDelay;
+	private int chainDelay;
+	private int goldDelay;
+	private int diamondDelay;
 
-	public static void init() {
-		MinecraftForge.EVENT_BUS.register(new SlowGuiAccessFeature());
+	public boolean hasSubscriptions() {
+		return true;
 	}
+
+	public void loadConfig(Configuration config) {
+		super.loadConfig(config);
+
+		Property prop = config.get(name, "LeatherDelay", 200);
+        leatherDelay = prop.getInt(200);
+		prop = config.get(name, "IronDelay", 600);
+        ironDelay = prop.getInt(600);
+		prop = config.get(name, "ChainDelay", 600);
+        chainDelay = prop.getInt(600);
+		prop = config.get(name, "GoldDelay", 200);
+        goldDelay = prop.getInt(200);
+		prop = config.get(name, "DiamondDelay", 1200);
+        diamondDelay = prop.getInt(1200);
+    }
+
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -58,19 +82,19 @@ public class SlowGuiAccessFeature {
                     ItemArmor armor = (ItemArmor)stack.getItem();
 					switch (armor.getArmorMaterial()) {
 						case LEATHER:
-							armorDelayMs += 200;
+							armorDelayMs += leatherDelay;
 							break;
 						case IRON:
-							armorDelayMs += 600;
+							armorDelayMs += ironDelay;
 							break;
 						case CHAIN:
-							armorDelayMs += 600;
+							armorDelayMs += chainDelay;
 							break;
 						case GOLD:
-							armorDelayMs += 200;
+							armorDelayMs += goldDelay;
 							break;
 						case DIAMOND:
-							armorDelayMs += 1200;
+							armorDelayMs += diamondDelay;
 							break;
 
 					}
