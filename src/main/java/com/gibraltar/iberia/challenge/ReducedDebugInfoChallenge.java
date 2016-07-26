@@ -1,12 +1,16 @@
-package com.gibraltar.iberia.feature;
+package com.gibraltar.iberia.challenge;
 
 import net.minecraft.world.GameRules;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ReducedDebugInfoWatcher {
+public class ReducedDebugInfoChallenge extends Challenge {	
+	public boolean hasSubscriptions() {
+		return true;
+	}
+
 	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event) {
+    public void onWorldLoad(WorldEvent.Load event) {
         GameRules rules = event.getWorld().getGameRules();
         rules.setOrCreateGameRule("reducedDebugInfo", "true");
     }
