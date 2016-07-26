@@ -10,12 +10,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.gibraltar.iberia.Reference;
 
 public class BlockHardStone extends BlockStone {
-    public final static float HARDNESS_MULTIPLE = 10F;
-
 	public BlockHardStone() {
 		super();
 
-        setHardness(BlockHardStone.HARDNESS_MULTIPLE * 1.5F);
+        setHardness(1.5F);
         setResistance(10.0F);
         setUnlocalizedName("hardstone");
         setRegistryName(Reference.MOD_PREFIX + "hardstone");
