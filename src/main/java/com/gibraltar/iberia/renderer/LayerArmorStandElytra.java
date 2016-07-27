@@ -1,4 +1,4 @@
-package com.gibraltar.iberia.feature;
+package com.gibraltar.iberia.renderer;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelElytra;

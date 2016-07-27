@@ -10,7 +10,6 @@ import com.gibraltar.iberia.challenge.ReducedDebugInfoChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
 import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
 import com.gibraltar.iberia.feature.QuickArmorSwapFeature;
-import com.gibraltar.iberia.feature.ArmorStandElytraRenderFeature;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -53,12 +52,6 @@ public class CommonProxy {
         boolean enabled = prop.getBoolean(true);
         if (enabled) {
             QuickArmorSwapFeature.init();
-        }
-
-        prop = config.get("features", "Elytra On Armor Stands", true);
-        enabled = prop.getBoolean(true);
-        if (enabled) {
-            ArmorStandElytraRenderFeature.init();
         }
 
         config.save();

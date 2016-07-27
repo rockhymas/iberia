@@ -137,6 +137,26 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	    }
 	}
 
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
+	    if (isSlowGui(event.getGui())) {
+			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
+				event.setCanceled(true);
+			}
+	    }
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onKeyboardInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+	    if (isSlowGui(event.getGui())) {
+			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime() && (Keyboard.getEventKey() != 1)) {
+				event.setCanceled(true);
+			}
+	    }
+	}
+
 	private boolean isSlowGui(GuiScreen gui) {
 		return gui instanceof GuiContainer &&
 			!(gui instanceof InventoryEffectRenderer) &&
@@ -171,24 +191,4 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         renderer.pos((double)(x + width), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
         Tessellator.getInstance().draw();
     }
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
-	    if (isSlowGui(event.getGui())) {
-			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
-				event.setCanceled(true);
-			}
-	    }
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onKeyboardInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-	    if (isSlowGui(event.getGui())) {
-			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime() && (Keyboard.getEventKey() != 1)) {
-				event.setCanceled(true);
-			}
-	    }
-	}
 }
