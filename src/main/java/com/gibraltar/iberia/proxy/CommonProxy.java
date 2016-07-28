@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import com.gibraltar.iberia.challenge.Challenge;
 import com.gibraltar.iberia.challenge.HardStoneChallenge;
-import com.gibraltar.iberia.challenge.ReducedDebugInfoChallenge;
+import com.gibraltar.iberia.challenge.FindYourWayChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
 import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
 
@@ -31,7 +31,7 @@ public class CommonProxy {
         challenges.add(new HardStoneChallenge());
         challenges.add(new SleepToHealChallenge());
         challenges.add(new ArmorSlowsCraftingChallenge());
-        challenges.add(new ReducedDebugInfoChallenge());
+        challenges.add(new FindYourWayChallenge());
 
         forEachChallenge(challenge -> challenge.loadConfig(config));
 

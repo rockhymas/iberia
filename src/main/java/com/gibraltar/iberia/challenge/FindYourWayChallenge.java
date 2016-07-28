@@ -4,7 +4,7 @@ import net.minecraft.world.GameRules;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ReducedDebugInfoChallenge extends Challenge {	
+public class FindYourWayChallenge extends Challenge {	
 	public boolean hasSubscriptions() {
 		return true;
 	}
