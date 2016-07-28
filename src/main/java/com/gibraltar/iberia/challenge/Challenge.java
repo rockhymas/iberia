@@ -32,7 +32,7 @@ public class Challenge {
 	}
 
 	public void loadConfig(Configuration config) {
-        Property prop = config.get("challenges", name, true);
+        Property prop = config.get("_challenges", name, true);
         enabled = prop.getBoolean(true);
 	}
 }
