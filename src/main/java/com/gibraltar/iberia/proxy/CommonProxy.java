@@ -9,7 +9,6 @@ import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.challenge.ReducedDebugInfoChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
 import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
-import com.gibraltar.iberia.feature.QuickArmorSwapFeature;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -45,14 +44,6 @@ public class CommonProxy {
                 challenge.preInit(event);
             }
         });
-
-
-
-        Property prop = config.get("features", "Quick Armor Swap", true);
-        boolean enabled = prop.getBoolean(true);
-        if (enabled) {
-            QuickArmorSwapFeature.init();
-        }
 
         config.save();
     }

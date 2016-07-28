@@ -19,15 +19,24 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,6 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.Reference;
+import com.gibraltar.iberia.renderer.RenderArmorStandFactory;
 
 public class ArmorSlowsCraftingChallenge extends Challenge {
 	private long timeGuiOpened;
@@ -44,6 +54,25 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	private int chainDelay;
 	private int goldDelay;
 	private int diamondDelay;
+	private boolean quickArmorSwapEnabled;
+
+    private final EntityEquipmentSlot[] slotsToSwap;
+
+    public ArmorSlowsCraftingChallenge() {
+        slotsToSwap = new EntityEquipmentSlot[5];
+        slotsToSwap[0] = EntityEquipmentSlot.OFFHAND;
+        slotsToSwap[1] = EntityEquipmentSlot.HEAD;
+        slotsToSwap[2] = EntityEquipmentSlot.CHEST;
+        slotsToSwap[3] = EntityEquipmentSlot.LEGS;
+        slotsToSwap[4] = EntityEquipmentSlot.FEET;
+    }
+
+	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
+		if (quickArmorSwapEnabled) {
+			RenderingRegistry.registerEntityRenderingHandler(EntityArmorStand.class, new RenderArmorStandFactory());
+		}
+	}
 
 	public boolean hasSubscriptions() {
 		return true;
@@ -62,6 +91,8 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         goldDelay = prop.getInt(200);
 		prop = config.get(name, "DiamondDelay", 1200);
         diamondDelay = prop.getInt(1200);
+		prop = config.get(name, "QuickArmorSwap", true);
+        quickArmorSwapEnabled = prop.getBoolean(true);
     }
 
 
@@ -190,5 +221,47 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         renderer.pos((double)(x + width), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
         renderer.pos((double)(x + width), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
         Tessellator.getInstance().draw();
+    }
+
+	@SubscribeEvent
+    @SideOnly(Side.CLIENT)
+	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
+		if (!quickArmorSwapEnabled) {
+			return;
+		}
+
+        if (event.getTarget() instanceof EntityArmorStand && !event.getTarget().worldObj.isRemote && !event.getEntityPlayer().isSpectator()) {
+            EntityArmorStand armorStand = (EntityArmorStand) event.getTarget();
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                event.setCanceled(true);
+                EntityPlayer player = event.getEntityPlayer();
+                for (EntityEquipmentSlot slot : slotsToSwap) {
+                    ItemStack playerItem = player.getItemStackFromSlot(slot);
+                    ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
+                    player.setItemStackToSlot(slot, armorStandItem);
+                    armorStand.setItemStackToSlot(slot, playerItem);
+                }
+            }
+            else {
+                boolean isSmall = armorStand.isSmall();
+                Vec3d vec = event.getLocalPos();
+                double d4 = isSmall ? vec.yCoord * 2.0D : vec.yCoord;
+                ItemStack stack = event.getItemStack();
+
+                if (stack == null || !(stack.getItem() instanceof ItemElytra) || event.getHand() != EnumHand.MAIN_HAND) {
+                    return;
+                }
+
+                if (d4 >= 0.9D + (isSmall ? 0.3D : 0.0D) && d4 < 0.9D + (isSmall ? 1.0D : 0.7D)) {
+                    if (armorStand.getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null) {
+                        return;
+                    }
+
+                    event.setCanceled(true);
+                    armorStand.setItemStackToSlot(EntityEquipmentSlot.CHEST, stack);
+                    event.getEntityPlayer().setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+                }
+            }
+        }
     }
 }
