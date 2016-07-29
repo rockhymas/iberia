@@ -85,7 +85,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         leatherDelay = prop.getInt(200);
 		prop = config.get(name, "IronDelay", 600);
         ironDelay = prop.getInt(600);
-		prop = config.get(name, "ChainDelay", 600);
+		prop = config.get(name, "ChainDelay", 400);
         chainDelay = prop.getInt(600);
 		prop = config.get(name, "GoldDelay", 200);
         goldDelay = prop.getInt(200);
