@@ -3,7 +3,7 @@ Iberia: Minecraft Made Harder
 
 The philosophy of Iberia is to make Minecraft harder in ways that respect the vanilla Minecraft
 experience, enhance gameplay, encourage more experiences that are available in the game, and add
-a dose of reality without making it too "grindy".
+a dose of reality.
 
 Challenges
 ----------
@@ -14,10 +14,10 @@ Challenges
 
 Hard stone is any of the stone types (stone, andesite, diorite, granite) that has been surrounded
 by a compressing block on all six sides. Blocks that compress stone include stone itself, dirt, 
-and bedrock. Hard stone takes ten times as long to mine, unless you're using a diamond pickaxe.
-Once a block of stone has been surrounded by compressing blocks, it will convert to hard stone in
-about the same time as it takes for wheat to grow one stage. Likewise, hard stone will convert
-back to stone after it's been un-surrounded in the same amount of time. 
+and bedrock. Hard stone takes ten times as long to mine, unless you're using a golden or a diamond
+pickaxe. Once a block of stone has been surrounded by compressing blocks, it will convert to hard
+stone in about the same time as it takes for wheat to grow one stage. Likewise, hard stone will
+convert back to stone after it's been un-surrounded in the same amount of time. 
 
 [See it in action](http://imgur.com/a/9ognN)
 
@@ -65,13 +65,14 @@ It also means you'll want to easily put on and take off armor. To allow for that
 down SHIFT while right clicking an armor stand to swap the armor on the stand with the armor that
 you are wearing. As an dded bonus, quick armor swapping can put elytra on an armor stand.
 
-### Reduced Debug Info
+### Find Your Way
 
 *What is it?*
 
-Reduced debug info is a game rule that turns off "cheaty" info on the debug screen. So, with this
-on, you won't be able to find your location, the direction you are facing, the biome you're in, 
-the light level, the local difficulty, or what you're looking at from the F3 debug screen. 
+This challenge turns on reduced debug info, which is a game rule that turns off "cheaty" info on
+the debug screen. So, with this on, you won't be able to find your location, the direction you are
+facing, the biome you're in, the light level, the local difficulty, or what you're looking at from
+the F3 debug screen. 
 
 [See it in action](https://imgur.com/a/6irIP)
 
