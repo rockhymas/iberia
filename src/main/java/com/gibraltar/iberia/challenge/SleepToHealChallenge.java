@@ -13,10 +13,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class SleepToHealChallenge extends Challenge {
     private float healAmount;
 
+    @Override
     public boolean hasSubscriptions() {
         return true;
     }
 
+    @Override
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 

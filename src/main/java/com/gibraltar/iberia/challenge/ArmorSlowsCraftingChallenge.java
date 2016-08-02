@@ -67,6 +67,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         slotsToSwap[4] = EntityEquipmentSlot.FEET;
     }
 
+	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		if (quickArmorSwapEnabled) {
@@ -74,10 +75,12 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		}
 	}
 
+	@Override
 	public boolean hasSubscriptions() {
 		return true;
 	}
 
+	@Override
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 

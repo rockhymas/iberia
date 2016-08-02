@@ -37,11 +37,13 @@ public class HardStoneChallenge extends Challenge {
 	private float goldSlowdown;
 	private float diamondSlowdown;	
 	
+	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		hard_stone = new BlockHardStone();
 	}
 
+	@Override
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
@@ -57,6 +59,7 @@ public class HardStoneChallenge extends Challenge {
 		diamondSlowdown = (float)prop.getDouble(1.0D);
 	}
 
+	@Override
 	protected boolean hasSubscriptions() {
 		return true;
 	}
