@@ -82,3 +82,25 @@ You're going to need to use in-game tools for keeping track of where you are, an
 Maps, compasses, and markers that you build in your world are all tools for knowing where you are
 and where you are headed. The sun can be used to find your direction. You're on your own to be
 careful about light levels and local difficulty.
+
+### Death With Consequences
+
+*What is it?*
+
+This challenge is a new take on the hardcore world type, and is currently focused on single player
+games. When you die, the world spawn point and the player's spawn point will be randomly moved to
+a location 1000+ blocks from the current world spawn. Combined with the "Find Your Way" challenge,
+it will be impossible to know which direction to go to find your old base. It's like hardcore in
+that you are starting over completely fresh, but different, because you'll still be in the same
+world as before. But like a fresh world, you likely won't know where you are. Or maybe you'll
+spawn smack dab in the middle of a base you built four lifetimes ago.
+
+*How do I deal with it?*
+
+First, don't die. That's the basic rule for hardcore worlds, and still applies. But if you do, your
+best bet is to start a new life and hope that as you build and explore that you'll find your old
+whereabouts. Once you've died once, you instantly have a new and important reason to go exploring.
+You can think of it like having a longing to find your way back home, but having no idea how to get
+there. If you do find an old base while building your new life, then you have a natural opportunity
+to link up your bases, creating a natural transportation network that may be difficult to find the
+motivation to build in standard single player Minecraft.  

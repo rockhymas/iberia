@@ -9,6 +9,7 @@ import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.challenge.FindYourWayChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
 import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
+import com.gibraltar.iberia.challenge.DeathWithConsequencesChallenge;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -32,6 +33,7 @@ public class CommonProxy {
         challenges.add(new SleepToHealChallenge());
         challenges.add(new ArmorSlowsCraftingChallenge());
         challenges.add(new FindYourWayChallenge());
+        challenges.add(new DeathWithConsequencesChallenge());
 
         forEachChallenge(challenge -> challenge.loadConfig(config));
 
