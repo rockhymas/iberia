@@ -3,15 +3,18 @@ package com.gibraltar.iberia.challenge;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,17 +44,23 @@ public class DeathWithConsequencesChallenge extends Challenge {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-            player.setSpawnPoint(null, false);
+        if (event.getEntityLiving() instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
 
             // Calculate new spawn point
             // Find angle to current spawn, from player location. Choose random angle
             // 180 degrees away from that angle. Go distanceToNewSpawn blocks out.
             // Rerun spawn point algorithm to find a good spot.
-            World world = player.worldObj;
+            WorldProvider world = player.worldObj.provider;
             BlockPos spawnPoint = world.getSpawnPoint();
             BlockPos playerPos = new BlockPos(player);
+            if (!world.isSurfaceWorld()) {
+                world = DimensionManager.getProvider(world.getRespawnDimension(player));
+                spawnPoint = world.getSpawnPoint();
+                playerPos = spawnPoint;
+            }
+
+            player.setSpawnChunk(null, false, world.getRespawnDimension(player));
 
             // prevent division by 0
             if (spawnPoint.getX() - playerPos.getX() == 0) {
@@ -82,13 +91,13 @@ public class DeathWithConsequencesChallenge extends Challenge {
         }
     }
 
-    private BlockPos findSpawnPointNear(BlockPos position, World world) {
-        BiomeProvider biomeprovider = world.provider.getBiomeProvider();
+    private BlockPos findSpawnPointNear(BlockPos position, WorldProvider world) {
+        BiomeProvider biomeprovider = world.getBiomeProvider();
         List<Biome> list = biomeprovider.getBiomesToSpawnIn();
         Random random = new Random(world.getSeed());
         BlockPos blockpos = biomeprovider.findBiomePosition(position.getX(), position.getZ(), 256, list, random);
         int i = position.getX();
-        int j = world.provider.getAverageGroundLevel();
+        int j = world.getAverageGroundLevel();
         int k = position.getZ();
 
         if (blockpos != null)
@@ -103,7 +112,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
 
         int l = 0;
 
-        while (!world.provider.canCoordinateBeSpawn(i, k))
+        while (!world.canCoordinateBeSpawn(i, k))
         {
             i += random.nextInt(64) - random.nextInt(64);
             k += random.nextInt(64) - random.nextInt(64);
