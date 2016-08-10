@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiHopper;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiBeacon;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemElytra;
@@ -154,7 +156,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
                 VertexBuffer vertexbuffer = tessellator.getBuffer();
 				int guiWidth = event.getGui().width;
 				int guiHeight = event.getGui().height;
-				int guiDrawnHeight = guiDrawnHeight(event.getGui());
+				int guiDrawnHeight = guiDrawnHeight((GuiContainer)event.getGui());
 				int guiDrawnWidth = guiDrawnWidth(event.getGui());
                 int guiLeft = (guiWidth - guiDrawnWidth) / 2;
 				int guiTop = (guiHeight - guiDrawnHeight) / 2;
@@ -198,12 +200,15 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 			!(gui instanceof GuiScreenHorseInventory);
 	}
 
-	private int guiDrawnHeight(GuiScreen gui) {
+	private int guiDrawnHeight(GuiContainer gui) {
 		if (gui instanceof GuiHopper) {
 			return 133;
 		}
 		if (gui instanceof GuiBeacon) {
 			return 219;
+		}
+		if (gui instanceof GuiChest && ((ContainerChest)gui.inventorySlots).getLowerChestInventory().getSizeInventory() / 9 > 3) {
+			return 222;
 		}
 
 		return 166;
