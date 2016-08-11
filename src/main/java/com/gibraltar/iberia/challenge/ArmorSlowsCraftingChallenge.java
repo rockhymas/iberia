@@ -96,6 +96,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         goldDelay = prop.getInt(200);
 		prop = config.get(name, "DiamondDelay", 1200);
         diamondDelay = prop.getInt(1200);
+
 		prop = config.get(name, "QuickArmorSwap", true);
         quickArmorSwapEnabled = prop.getBoolean(true);
     }
@@ -104,37 +105,37 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-	    if (isSlowGui(event.getGui())) {
-			timeGuiOpened = Minecraft.getSystemTime();
-			Iterable<ItemStack> armorInventory = Minecraft.getMinecraft().thePlayer.getArmorInventoryList();
-			armorDelayMs = 0;
+	    if (!isSlowGui(event.getGui())) {
+			return;
+		}
 
-			for (Object item : armorInventory) {
-                ItemStack stack = (ItemStack) item;
-                if (stack == null) {
-                    continue;
-                }
-				if (stack.getItem() instanceof ItemArmor) {
-                    ItemArmor armor = (ItemArmor)stack.getItem();
-					switch (armor.getArmorMaterial()) {
-						case LEATHER:
-							armorDelayMs += leatherDelay;
-							break;
-						case IRON:
-							armorDelayMs += ironDelay;
-							break;
-						case CHAIN:
-							armorDelayMs += chainDelay;
-							break;
-						case GOLD:
-							armorDelayMs += goldDelay;
-							break;
-						case DIAMOND:
-							armorDelayMs += diamondDelay;
-							break;
+		timeGuiOpened = Minecraft.getSystemTime();
+		Iterable<ItemStack> armorInventory = Minecraft.getMinecraft().thePlayer.getArmorInventoryList();
+		armorDelayMs = 0;
 
-					}
-				}
+		for (Object item : armorInventory) {
+			ItemStack stack = (ItemStack) item;
+			if (stack == null || !(stack.getItem() instanceof ItemArmor)) {
+				continue;
+			}
+
+			ItemArmor armor = (ItemArmor)stack.getItem();
+			switch (armor.getArmorMaterial()) {
+				case LEATHER:
+					armorDelayMs += leatherDelay;
+					break;
+				case IRON:
+					armorDelayMs += ironDelay;
+					break;
+				case CHAIN:
+					armorDelayMs += chainDelay;
+					break;
+				case GOLD:
+					armorDelayMs += goldDelay;
+					break;
+				case DIAMOND:
+					armorDelayMs += diamondDelay;
+					break;
 			}
 	    }
 	}
@@ -142,55 +143,63 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-	    if (isSlowGui(event.getGui())) {
-			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
-				double visibility = (Minecraft.getSystemTime() - timeGuiOpened) / (double)armorDelayMs;
-				int alpha = (int)Math.round(64.0D - visibility * 64.0D);
+	    if (!isSlowGui(event.getGui())) {
+			return;
+		}
 
-				GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.disableTexture2D();
-				GlStateManager.enableBlend();
+		if (timeGuiOpened + armorDelayMs <= Minecraft.getSystemTime()) {
+			return;
+		}
 
-				Tessellator tessellator = Tessellator.getInstance();
-                VertexBuffer vertexbuffer = tessellator.getBuffer();
-				int guiWidth = event.getGui().width;
-				int guiHeight = event.getGui().height;
-				int guiDrawnHeight = guiDrawnHeight((GuiContainer)event.getGui());
-				int guiDrawnWidth = guiDrawnWidth(event.getGui());
-                int guiLeft = (guiWidth - guiDrawnWidth) / 2;
-				int guiTop = (guiHeight - guiDrawnHeight) / 2;
-				this.draw(vertexbuffer, guiLeft, guiTop, guiDrawnWidth, guiDrawnHeight, 255, 255, 255, 128);
-				int guiProgressLeft = guiLeft + (guiDrawnWidth - 16) / 2;
-				int guiProgressTop = guiTop + (guiDrawnHeight - 86);
-				this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, 16, 2, 0, 0, 0, 128);
-				this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, (int)Math.round(16.0D * visibility), 2, 255, 255, 255, 255);
+		double visibility = (Minecraft.getSystemTime() - timeGuiOpened) / (double)armorDelayMs;
+		int alpha = (int)Math.round(64.0D - visibility * 64.0D);
 
-                GlStateManager.enableTexture2D();
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();				
-			}
-	    }
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		int guiWidth = event.getGui().width;
+		int guiHeight = event.getGui().height;
+		int guiDrawnHeight = guiDrawnHeight((GuiContainer)event.getGui());
+		int guiDrawnWidth = guiDrawnWidth(event.getGui());
+		int guiLeft = (guiWidth - guiDrawnWidth) / 2;
+		int guiTop = (guiHeight - guiDrawnHeight) / 2;
+		this.draw(vertexbuffer, guiLeft, guiTop, guiDrawnWidth, guiDrawnHeight, 255, 255, 255, 128);
+		int guiProgressLeft = guiLeft + (guiDrawnWidth - 16) / 2;
+		int guiProgressTop = guiTop + (guiDrawnHeight - 86);
+		this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, 16, 2, 0, 0, 0, 128);
+		this.draw(vertexbuffer, guiProgressLeft, guiProgressTop, (int)Math.round(16.0D * visibility), 2, 255, 255, 255, 255);
+
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();				
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onMouseInput(GuiScreenEvent.MouseInputEvent.Pre event) {
-	    if (isSlowGui(event.getGui())) {
-			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
-				event.setCanceled(true);
-			}
-	    }
+	    if (!isSlowGui(event.getGui())) {
+			return;
+		}
+
+		if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime()) {
+			event.setCanceled(true);
+		}
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onKeyboardInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-	    if (isSlowGui(event.getGui())) {
-			if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime() && (Keyboard.getEventKey() != 1)) {
-				event.setCanceled(true);
-			}
-	    }
+	    if (!isSlowGui(event.getGui())) {
+			return;
+		}
+
+		if (timeGuiOpened + armorDelayMs > Minecraft.getSystemTime() && (Keyboard.getEventKey() != 1)) {
+			event.setCanceled(true);
+		}
 	}
 
 	private boolean isSlowGui(GuiScreen gui) {
@@ -234,42 +243,46 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
     @SideOnly(Side.CLIENT)
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
-		if (!quickArmorSwapEnabled) {
+		if (!quickArmorSwapEnabled || event.getTarget().worldObj.isRemote || event.getEntityPlayer().isSpectator()) {
 			return;
 		}
 
-        if (event.getTarget() instanceof EntityArmorStand && !event.getTarget().worldObj.isRemote && !event.getEntityPlayer().isSpectator()) {
-            EntityArmorStand armorStand = (EntityArmorStand) event.getTarget();
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-                event.setCanceled(true);
-                EntityPlayer player = event.getEntityPlayer();
-                for (EntityEquipmentSlot slot : slotsToSwap) {
-                    ItemStack playerItem = player.getItemStackFromSlot(slot);
-                    ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
-                    player.setItemStackToSlot(slot, armorStandItem);
-                    armorStand.setItemStackToSlot(slot, playerItem);
-                }
-            }
-            else {
-                boolean isSmall = armorStand.isSmall();
-                Vec3d vec = event.getLocalPos();
-                double d4 = isSmall ? vec.yCoord * 2.0D : vec.yCoord;
-                ItemStack stack = event.getItemStack();
+        if (!(event.getTarget() instanceof EntityArmorStand)) {
+			return;
+		}
 
-                if (stack == null || !(stack.getItem() instanceof ItemElytra) || event.getHand() != EnumHand.MAIN_HAND) {
-                    return;
-                }
+		EntityArmorStand armorStand = (EntityArmorStand) event.getTarget();
+		// Shift-right click to swap armor
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+			event.setCanceled(true);
+			EntityPlayer player = event.getEntityPlayer();
+			for (EntityEquipmentSlot slot : slotsToSwap) {
+				ItemStack playerItem = player.getItemStackFromSlot(slot);
+				ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
+				player.setItemStackToSlot(slot, armorStandItem);
+				armorStand.setItemStackToSlot(slot, playerItem);
+			}
+		}
+		// or right click to place/remove elytra
+		else {
+			boolean isSmall = armorStand.isSmall();
+			Vec3d vec = event.getLocalPos();
+			double d4 = isSmall ? vec.yCoord * 2.0D : vec.yCoord;
+			ItemStack stack = event.getItemStack();
 
-                if (d4 >= 0.9D + (isSmall ? 0.3D : 0.0D) && d4 < 0.9D + (isSmall ? 1.0D : 0.7D)) {
-                    if (armorStand.getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null) {
-                        return;
-                    }
+			if (stack == null || !(stack.getItem() instanceof ItemElytra) || event.getHand() != EnumHand.MAIN_HAND) {
+				return;
+			}
 
-                    event.setCanceled(true);
-                    armorStand.setItemStackToSlot(EntityEquipmentSlot.CHEST, stack);
-                    event.getEntityPlayer().setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
-                }
-            }
+			if (d4 >= 0.9D + (isSmall ? 0.3D : 0.0D) && d4 < 0.9D + (isSmall ? 1.0D : 0.7D)) {
+				if (armorStand.getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null) {
+					return;
+				}
+
+				event.setCanceled(true);
+				armorStand.setItemStackToSlot(EntityEquipmentSlot.CHEST, stack);
+				event.getEntityPlayer().setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+			}
         }
     }
 }
