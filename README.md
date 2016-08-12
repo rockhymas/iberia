@@ -104,3 +104,7 @@ You can think of it like having a longing to find your way back home, but having
 there. If you do find an old base while building your new life, then you have a natural opportunity
 to link up your bases, creating a natural transportation network that may be difficult to find the
 motivation to build in standard single player Minecraft.  
+
+License
+-------
+Iberia is Open Source and distributed under the [CC-BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
