@@ -47,20 +47,22 @@ public class DeathWithConsequencesChallenge extends Challenge {
         if (event.getEntityLiving() instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
 
-            // Calculate new spawn point
-            // Find angle to current spawn, from player location. Choose random angle
-            // 180 degrees away from that angle. Go distanceToNewSpawn blocks out.
-            // Rerun spawn point algorithm to find a good spot.
             WorldProvider world = player.worldObj.provider;
-            BlockPos spawnPoint = world.getSpawnPoint();
             BlockPos playerPos = new BlockPos(player);
+            BlockPos spawnPoint = world.getSpawnPoint();
             if (!world.isSurfaceWorld()) {
                 world = DimensionManager.getProvider(world.getRespawnDimension(player));
                 spawnPoint = world.getSpawnPoint();
                 playerPos = spawnPoint;
             }
 
+            // Reset player spawn
             player.setSpawnChunk(null, false, world.getRespawnDimension(player));
+
+            // Calculate new spawn point
+            // Find angle to current spawn, from player location. Choose random angle
+            // 180 degrees away from that angle. Go distanceToNewSpawn blocks out.
+            // Rerun spawn point algorithm to find a good spot.
 
             // prevent division by 0
             if (spawnPoint.getX() - playerPos.getX() == 0) {
@@ -91,6 +93,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         }
     }
 
+    // Same algorithm used at game start to pick a location near 0, 0
     private BlockPos findSpawnPointNear(BlockPos position, WorldProvider world) {
         BiomeProvider biomeprovider = world.getBiomeProvider();
         List<Biome> list = biomeprovider.getBiomesToSpawnIn();

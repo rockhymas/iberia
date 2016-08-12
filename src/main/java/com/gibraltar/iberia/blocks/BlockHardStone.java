@@ -41,5 +41,4 @@ public class BlockHardStone extends BlockStone {
             return new ItemStack(item, 1, i);
         }
     }
-
 }

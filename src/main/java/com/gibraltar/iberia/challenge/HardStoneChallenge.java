@@ -10,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
@@ -68,29 +69,44 @@ public class HardStoneChallenge extends Challenge {
 
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+		if (event.getState().getBlock() != HardStoneChallenge.hard_stone) {
+			return;
+		}
+
 		ItemStack heldItemStack = event.getEntityPlayer().getHeldItemMainhand();
-		if (heldItemStack != null && event.getState().getBlock() == HardStoneChallenge.hard_stone) {
-			Item heldItem = heldItemStack.getItem();
-			if (heldItem == Items.WOODEN_PICKAXE) {
+		if (heldItemStack == null || !(heldItemStack.getItem() instanceof ItemPickaxe)) {
+			return;
+		}
+
+		ItemPickaxe pickaxe = (ItemPickaxe)heldItemStack.getItem();
+		switch (pickaxe.getToolMaterial()) {
+			case WOOD:
 				event.setNewSpeed(event.getOriginalSpeed() / woodSlowdown);
-			}
-			else if (heldItem == Items.STONE_PICKAXE) {
+				break;
+			case STONE:
 				event.setNewSpeed(event.getOriginalSpeed() / stoneSlowdown);
-			}
-			else if (heldItem == Items.IRON_PICKAXE) {
+				break;
+			case IRON:
 				event.setNewSpeed(event.getOriginalSpeed() / ironSlowdown);
-			}
-			else if (heldItem == Items.GOLDEN_PICKAXE) {
+				break;
+			case GOLD:
 				event.setNewSpeed(event.getOriginalSpeed() / goldSlowdown);
-			}
-			else if (heldItem == Items.DIAMOND_PICKAXE) {
+				break;
+			case DIAMOND:
 				event.setNewSpeed(event.getOriginalSpeed() / diamondSlowdown);
-			}
+				break;					
 		}
 	}
 
 	private boolean isCompressingBlock(Block block) {
-		return block == Blocks.STONE || block == HardStoneChallenge.hard_stone || block == Blocks.BEDROCK || block == Blocks.DIRT ||
+		return block == Blocks.STONE ||
+			block == HardStoneChallenge.hard_stone ||
+			block == Blocks.BEDROCK ||
+			block == Blocks.DIRT ||
+			block == Blocks.SANDSTONE ||
+			block == Blocks.RED_SANDSTONE ||
+			block == Blocks.STAINED_HARDENED_CLAY ||
+			block == Blocks.HARDENED_CLAY ||
 			(block instanceof BlockOre);
 	}
 
