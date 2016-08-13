@@ -251,7 +251,11 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
     @SideOnly(Side.CLIENT)
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
-		if (!quickArmorSwapEnabled || event.getTarget().worldObj.isRemote || event.getEntityPlayer().isSpectator()) {
+		if (!quickArmorSwapEnabled || event.getTarget().worldObj.isRemote) {
+			return;
+		}
+
+		if (event.getEntityPlayer().isSpectator() || event.getEntityPlayer().isCreative()) {
 			return;
 		}
 
