@@ -19,7 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class SleepToHealChallenge extends Challenge {
-    private float healAmount;
+    private float healAmountHard;
+    private float healAmountNormal;
+    private float healAmountEasy;
 
     @Override
     public boolean hasSubscriptions() {
@@ -30,8 +32,12 @@ public class SleepToHealChallenge extends Challenge {
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
-		Property prop = config.get(name, "HealAmount", 2.0D);
-        healAmount = (float)prop.getDouble(2.0D);
+		Property prop = config.get(name, "HealAmountHard", 2.0D);
+        healAmountHard = (float)prop.getDouble(2.0D);
+		prop = config.get(name, "HealAmountNormal", 4.0D);
+        healAmountNormal = (float)prop.getDouble(4.0D);
+		prop = config.get(name, "HealAmountEasy", 6.0D);
+        healAmountEasy = (float)prop.getDouble(6.0D);
     }
 
 	@SubscribeEvent
@@ -45,7 +51,17 @@ public class SleepToHealChallenge extends Challenge {
         if (!event.wakeImmediately()) {
             EntityPlayer player = event.getEntityPlayer();
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
-                player.heal(healAmount);
+                switch (player.worldObj.getDifficulty()) {
+                    case HARD:
+                        player.heal(healAmountHard);
+                        break;
+                    case NORMAL:
+                        player.heal(healAmountNormal);
+                        break;
+                    case EASY:
+                        player.heal(healAmountEasy);
+                        break;
+                }
             }
         }
     }

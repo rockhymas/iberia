@@ -33,8 +33,8 @@ too long. In the later game, your diamond pickaxe will open up the ability to do
 Vanilla natural regeneration is just too fast to be challenging. Disabling it entirely makes the 
 game harder, but doesn't give you any way to recover from injuries until you can eat a golden
 apple or make potions of healing. "Sleep to heal" allows you to slowly recover from injuries by
-sleeping. Each time you sleep and wake naturally, you can heal up to one heart as long as you are
-not hungry at all.
+sleeping. Each time you sleep and wake naturally, you can heal two hearts (one on Hard
+difficulty, three on Easy difficulty) as long as you are not hungry at all.
 
 [See it in action](http://imgur.com/a/i01Xy)
 
