@@ -214,7 +214,8 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		return gui instanceof GuiContainer &&
 			!(gui instanceof InventoryEffectRenderer) &&
 			!(gui instanceof GuiMerchant) &&
-			!(gui instanceof GuiScreenHorseInventory);
+			!(gui instanceof GuiScreenHorseInventory) &&
+			!gui.mc.thePlayer.isCreative();
 	}
 
 	private int guiDrawnHeight(GuiContainer gui) {
