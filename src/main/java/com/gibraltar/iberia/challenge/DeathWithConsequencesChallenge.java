@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -29,7 +30,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class DeathWithConsequencesChallenge extends Challenge {
-    private int distanceToNewSpawn = 1000;
+    private int distanceToNewSpawnHard = 1500;
+    private int distanceToNewSpawnNormal = 1000;
+    private int distanceToNewSpawnEasy = 500;
 
     @Override
 	public boolean hasSubscriptions() {
@@ -40,8 +43,12 @@ public class DeathWithConsequencesChallenge extends Challenge {
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
-		Property prop = config.get(name, "distanceToNewSpawn", 1000);
-        distanceToNewSpawn = prop.getInt(1000);
+		Property prop = config.get(name, "distanceToNewSpawnHard", 1500);
+        distanceToNewSpawnHard = prop.getInt(1500);
+        prop = config.get(name, "distanceToNewSpawnNormal", 1000);
+        distanceToNewSpawnNormal = prop.getInt(1000);
+        prop = config.get(name, "distanceToNewSpawnEasy", 500);
+        distanceToNewSpawnEasy = prop.getInt(500);
 	}
 
     @SubscribeEvent
@@ -54,6 +61,10 @@ public class DeathWithConsequencesChallenge extends Challenge {
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntityLiving() instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
+
+            if (player.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
+                return;
+            }
 
             WorldProvider world = player.worldObj.provider;
             BlockPos playerPos = new BlockPos(player);
@@ -90,6 +101,19 @@ public class DeathWithConsequencesChallenge extends Challenge {
             // randomize angle +/- 90 degrees
             Random random = new Random((int)(angle * 180 / Math.PI));
             angle = angle + (random.nextDouble() - 0.5) * Math.PI;
+
+            int distanceToNewSpawn = 0;
+            switch (player.worldObj.getDifficulty()) {
+                case HARD:
+                    distanceToNewSpawn = distanceToNewSpawnHard;
+                    break;
+                case NORMAL:
+                    distanceToNewSpawn = distanceToNewSpawnNormal;
+                    break;
+                case EASY:
+                    distanceToNewSpawn = distanceToNewSpawnEasy;
+                    break;
+            }
 
             // use angle to find new point from which to search for a spawn
             BlockPos newSpawn = spawnPoint.west((int)(Math.cos(angle) * distanceToNewSpawn));
