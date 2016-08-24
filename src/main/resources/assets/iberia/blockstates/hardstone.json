@@ -1,12 +1,17 @@
 {
     "variants": {
-        "variant=stone": { "model": "stone" },
-        "variant=andesite": { "model": "andesite" },
-        "variant=diorite": { "model": "diorite" },
-        "variant=granite": { "model": "granite" },
-        "variant=smooth_andesite": { "model": "andesite_smooth" },
-        "variant=smooth_diorite": { "model": "diorite_smooth" },
-        "variant=smooth_granite": { "model": "granite_smooth" },
+        "variant=stone": [
+            { "model": "iberia:hardstone" },
+            { "model": "iberia:hardstone" },
+            { "model": "iberia:hardstone", "y": 180 },
+            { "model": "iberia:hardstone", "y": 180 }
+        ],
+        "variant=andesite": { "model": "iberia:hardandesite" },
+        "variant=diorite": { "model": "iberia:harddiorite" },
+        "variant=granite": { "model": "iberia:hardgranite" },
+        "variant=smooth_andesite": { "model": "iberia:hardandesite_smooth" },
+        "variant=smooth_diorite": { "model": "iberia:harddiorite_smooth" },
+        "variant=smooth_granite": { "model": "iberia:hardgranite_smooth" },
         "inventory": { "model": "stone" }
     }
 }
