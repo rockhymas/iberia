@@ -1,3 +1,8 @@
+---
+layout: default
+title: Blogging Like a Hacker
+---
+
 Iberia: Minecraft Made Harder
 ====================
 
