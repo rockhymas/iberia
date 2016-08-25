@@ -105,6 +105,18 @@ there. If you do find an old base while building your new life, then you have a 
 to link up your bases, creating a natural transportation network that may be difficult to find the
 motivation to build in standard single player Minecraft.  
 
+Links
+-----
+[Documentation](http://rockhymas.github.io/iberia/)
+
+[Repository](http://github.com/rockhymas/iberia/)
+
+[Issues](http://github.com/rockhymas/iberia/issues)
+
+[Gibraltar's Twitter](https://twitter.com/gibraltarmcd)
+
+[Gibraltar's Blog](http://gibraltar.rockhymas.com/)
+
 License
 -------
 Iberia is Open Source and distributed under the [CC-BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
