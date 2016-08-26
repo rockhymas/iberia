@@ -31,10 +31,12 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.challenge.HardStoneChallenge;
+import com.gibraltar.iberia.world.HardStoneGenerator;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -50,6 +52,8 @@ public class HardStoneChallenge extends Challenge {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		hard_stone = new BlockHardStone();
+
+		GameRegistry.registerWorldGenerator(new HardStoneGenerator(), 0);
 	}
 
 	@Override
@@ -106,29 +110,6 @@ public class HardStoneChallenge extends Challenge {
 		}
 	}
 
-	private boolean isCompressingBlock(Block block) {
-		return block == Blocks.STONE ||
-			block == HardStoneChallenge.hard_stone ||
-			block == Blocks.BEDROCK ||
-			block == Blocks.DIRT ||
-			block == Blocks.SANDSTONE ||
-			block == Blocks.RED_SANDSTONE ||
-			block == Blocks.STAINED_HARDENED_CLAY ||
-			block == Blocks.HARDENED_CLAY ||
-			(block instanceof BlockOre);
-	}
-
-	private boolean isSurroundedByCompressingBlocks(World world, BlockPos pos)
-	{
-		return isCompressingBlock(world.getBlockState(pos.up()).getBlock()) &&
-			isCompressingBlock(world.getBlockState(pos.down()).getBlock()) &&
-			isCompressingBlock(world.getBlockState(pos.north()).getBlock()) &&
-			isCompressingBlock(world.getBlockState(pos.south()).getBlock()) &&
-			isCompressingBlock(world.getBlockState(pos.east()).getBlock()) &&
-			isCompressingBlock(world.getBlockState(pos.west()).getBlock());
-	}
-
-
 	@SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
 		if (event.phase == TickEvent.Phase.START || event.side == Side.CLIENT)
@@ -165,7 +146,7 @@ public class HardStoneChallenge extends Challenge {
 							{
 								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
 								boolean hard = block == HardStoneChallenge.hard_stone;
-								boolean shouldBeHard = isSurroundedByCompressingBlocks(event.world, pos);
+								boolean shouldBeHard = BlockHardStone.isSurroundedByCompressingBlocks(event.world, pos, false);
 
 								if (hard != shouldBeHard)
 								{

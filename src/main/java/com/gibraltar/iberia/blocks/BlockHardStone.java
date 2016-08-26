@@ -8,11 +8,15 @@
  */
 package com.gibraltar.iberia.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.gibraltar.iberia.Reference;
@@ -49,4 +53,27 @@ public class BlockHardStone extends BlockStone {
             return new ItemStack(item, 1, i);
         }
     }
+
+    public static boolean isCompressingBlock(Block block) {
+		return block instanceof BlockStone ||
+			block == Blocks.BEDROCK ||
+			block == Blocks.DIRT ||
+			block == Blocks.SANDSTONE ||
+			block == Blocks.RED_SANDSTONE ||
+			block == Blocks.STAINED_HARDENED_CLAY ||
+			block == Blocks.HARDENED_CLAY ||
+			(block instanceof BlockOre);
+	}
+
+    public static boolean isSurroundedByCompressingBlocks(World world, BlockPos pos, boolean withinChunk)
+	{
+		return 
+            isCompressingBlock(world.getBlockState(pos.up()).getBlock()) &&
+			isCompressingBlock(world.getBlockState(pos.down()).getBlock()) &&
+            // Don't check outside of chunk, may make some exposed stone hard, but it cleans itself up quickly
+			((pos.getZ() % 16 == 0  && withinChunk) || isCompressingBlock(world.getBlockState(pos.north()).getBlock())) &&
+			((pos.getZ() % 16 == 15 && withinChunk) || isCompressingBlock(world.getBlockState(pos.south()).getBlock())) &&
+			((pos.getX() % 16 == 15 && withinChunk) || isCompressingBlock(world.getBlockState(pos.east() ).getBlock())) &&
+			((pos.getX() % 16 == 0  && withinChunk) || isCompressingBlock(world.getBlockState(pos.west() ).getBlock()));
+	}
 }
