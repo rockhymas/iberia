@@ -71,8 +71,8 @@ public class HardStoneChallenge extends Challenge {
 		ironSlowdown = (float)prop.getDouble(10.0D);
         prop = config.get(name, "GoldSlowdown", 1.0D);
 		goldSlowdown = (float)prop.getDouble(1.0D);
-        prop = config.get(name, "DiamondSlowdown", 1.0D);
-		diamondSlowdown = (float)prop.getDouble(1.0D);
+        prop = config.get(name, "DiamondSlowdown", 2.0D);
+		diamondSlowdown = (float)prop.getDouble(2.0D);
 	}
 
 	@Override
