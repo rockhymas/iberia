@@ -80,7 +80,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
-		if (quickArmorSwapEnabled) {
+		if (quickArmorSwapEnabled && event.getSide() == Side.CLIENT) {
 			RenderingRegistry.registerEntityRenderingHandler(EntityArmorStand.class, new RenderArmorStandFactory());
 		}
 	}
@@ -210,6 +210,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private boolean isSlowGui(GuiScreen gui) {
 		return gui instanceof GuiContainer &&
 			!(gui instanceof InventoryEffectRenderer) &&
@@ -218,6 +219,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 			!gui.mc.thePlayer.isCreative();
 	}
 
+	@SideOnly(Side.CLIENT)
 	private int guiDrawnHeight(GuiContainer gui) {
 		if (gui instanceof GuiHopper) {
 			return 133;
@@ -232,6 +234,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		return 166;
 	}
 
+	@SideOnly(Side.CLIENT)
 	private int guiDrawnWidth(GuiScreen gui) {
 		if (gui instanceof GuiBeacon) {
 			return 230;
@@ -240,7 +243,8 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		return 176;
 	}
 
-    private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
+	@SideOnly(Side.CLIENT)
+	private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
         renderer.pos((double)(x + 0), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
