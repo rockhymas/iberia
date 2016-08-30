@@ -107,6 +107,8 @@ motivation to build in standard single player Minecraft.
 
 Links
 -----
+[Download](https://minecraft.curseforge.com/projects/iberia)
+
 [Documentation](http://rockhymas.github.io/iberia/)
 
 [Repository](http://github.com/rockhymas/iberia/)
