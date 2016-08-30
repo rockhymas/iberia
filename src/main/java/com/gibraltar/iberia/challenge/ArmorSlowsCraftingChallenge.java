@@ -94,8 +94,8 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
-		Property prop = config.get(name, "LeatherDelay", 200);
-        leatherDelay = prop.getInt(200);
+		Property prop = config.get(name, "LeatherDelay", 0);
+        leatherDelay = prop.getInt(0);
 		prop = config.get(name, "IronDelay", 600);
         ironDelay = prop.getInt(600);
 		prop = config.get(name, "ChainDelay", 400);
