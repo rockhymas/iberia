@@ -9,7 +9,9 @@
 package com.gibraltar.iberia.challenge;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
@@ -29,10 +31,13 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.config.ConfigCategory; 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,15 +46,11 @@ import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.world.HardStoneGenerator;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
 
 public class HardStoneChallenge extends Challenge {
 	public static Block hard_stone;
-	private float woodSlowdown;
-	private float stoneSlowdown;
-	private float ironSlowdown;
-	private float goldSlowdown;
-	private float diamondSlowdown;	
+	Map<String, Float> slowdowns;
 	
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
@@ -64,15 +65,21 @@ public class HardStoneChallenge extends Challenge {
 		super.loadConfig(config);
 
 		Property prop = config.get(name, "WoodSlowdown", 10.0D);
-        woodSlowdown = (float)prop.getDouble(10.0D);
         prop = config.get(name, "StoneSlowdown", 10.0D);
-		stoneSlowdown = (float)prop.getDouble(10.0D);
         prop = config.get(name, "IronSlowdown", 10.0D);
-		ironSlowdown = (float)prop.getDouble(10.0D);
         prop = config.get(name, "GoldSlowdown", 1.0D);
-		goldSlowdown = (float)prop.getDouble(1.0D);
         prop = config.get(name, "DiamondSlowdown", 2.0D);
-		diamondSlowdown = (float)prop.getDouble(2.0D);
+
+		slowdowns = new TreeMap<String, Float>();
+		ConfigCategory category = config.getCategory(name);
+		for (Map.Entry<String, Property> entry : category.getValues().entrySet()) {
+			String key = entry.getKey().trim().toLowerCase();
+			if (!key.endsWith("slowdown")) {
+				continue;
+			}
+			key = key.substring(0, key.length() - 8);
+			slowdowns.put(key, (float)entry.getValue().getDouble(10.0D));
+		}
 	}
 
 	@Override
@@ -94,23 +101,16 @@ public class HardStoneChallenge extends Challenge {
 		}
 
 		ItemPickaxe pickaxe = (ItemPickaxe)heldItemStack.getItem();
-		switch (pickaxe.getToolMaterial()) {
-			case WOOD:
-				event.setNewSpeed(event.getOriginalSpeed() / woodSlowdown);
-				break;
-			case STONE:
-				event.setNewSpeed(event.getOriginalSpeed() / stoneSlowdown);
-				break;
-			case IRON:
-				event.setNewSpeed(event.getOriginalSpeed() / ironSlowdown);
-				break;
-			case GOLD:
-				event.setNewSpeed(event.getOriginalSpeed() / goldSlowdown);
-				break;
-			case DIAMOND:
-				event.setNewSpeed(event.getOriginalSpeed() / diamondSlowdown);
-				break;					
+		String material = pickaxe.getToolMaterial().toString().toLowerCase();
+		float slowdown = 10.0F;
+		if (slowdowns.containsKey(material)) {
+			slowdown = slowdowns.get(material);
 		}
+		else {
+			FMLLog.info("[Iberia] New pickaxe type: %s", pickaxe.getToolMaterial());
+		}
+
+		event.setNewSpeed(event.getOriginalSpeed() / slowdown);
 	}
 
 	@SubscribeEvent
