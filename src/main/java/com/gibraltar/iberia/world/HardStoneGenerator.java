@@ -43,7 +43,7 @@ public class HardStoneGenerator implements IWorldGenerator {
 
                     if (block == Blocks.STONE && BlockHardStone.isSurroundedByCompressingBlocks(world, pos, true)) {
                         IBlockState newBlockState = HardStoneChallenge.hard_stone.getStateFromMeta(block.getMetaFromState(state));
-                        world.setBlockState(pos, newBlockState, 6 /*no block update, no re-render*/);
+                        world.setBlockState(pos, newBlockState, 20 /*no block update, no observer checks*/);
                     }
                 }
             }            
