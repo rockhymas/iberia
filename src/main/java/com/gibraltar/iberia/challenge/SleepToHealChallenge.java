@@ -17,6 +17,9 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SleepToHealChallenge extends Challenge {
     private float healAmountHard;
@@ -48,7 +51,9 @@ public class SleepToHealChallenge extends Challenge {
 
     @SubscribeEvent
     public void onPlayerWakeUp(PlayerWakeUpEvent event) {
-        if (!event.wakeImmediately()) {
+        // For some reason, should set spawn is true and update world is false when you get a full night's sleep.
+        // No other combination of event parameters can indicate that.
+        if (event.shouldSetSpawn() && !event.updateWorld()) {
             EntityPlayer player = event.getEntityPlayer();
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
                 switch (player.worldObj.getDifficulty()) {
