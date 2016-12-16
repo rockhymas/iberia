@@ -18,6 +18,7 @@ import com.gibraltar.iberia.challenge.FindYourWayChallenge;
 import com.gibraltar.iberia.challenge.SleepToHealChallenge;
 import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
 import com.gibraltar.iberia.challenge.DeathWithConsequencesChallenge;
+import com.gibraltar.iberia.network.MessageRegistry;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -56,6 +57,8 @@ public class CommonProxy {
         });
 
         config.save();
+
+        MessageRegistry.init();
     }
 
 	public void init(FMLInitializationEvent event)
