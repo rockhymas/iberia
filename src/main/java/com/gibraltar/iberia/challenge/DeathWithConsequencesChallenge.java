@@ -26,6 +26,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -165,10 +166,12 @@ public class DeathWithConsequencesChallenge extends Challenge {
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         MinecraftServer server = event.player.getServer();
-        setAllWorldTimes(server, 0);
+        long i = server.worldServers[0].getWorldInfo().getWorldTime() + 24000L;
+        setAllWorldTimes(server, i - i % 24000L);
+        FMLLog.info("on player respawn");
     }
 
-    private void setAllWorldTimes(MinecraftServer server, int time)
+    private void setAllWorldTimes(MinecraftServer server, long time)
     {
         for (int i = 0; i < server.worldServers.length; ++i)
         {
