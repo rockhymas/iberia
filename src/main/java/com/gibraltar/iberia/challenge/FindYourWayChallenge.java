@@ -19,7 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryItem;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -30,9 +37,14 @@ import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import com.gibraltar.iberia.items.ItemPersonalCompass;
 import com.gibraltar.iberia.network.MessageRegistry;
 import com.gibraltar.iberia.network.MessageGetPlayerSpawn;
+import com.gibraltar.iberia.Reference;
 
 public class FindYourWayChallenge extends Challenge {	
     public static Item compassPersonal;
@@ -134,5 +146,31 @@ public class FindYourWayChallenge extends Challenge {
         }
 
         return null;
+    }
+
+    @SubscribeEvent
+    public void onLootTableLoad(LootTableLoadEvent event) {
+        // Replace compass in loot table
+        LootTable loot = event.getTable();
+        // Go through "main" and "pool<n>" till we get a null LootPool
+        LootPool pool = loot.getPool("main");
+        int i = 0;
+        if (pool == null) {
+            pool = loot.getPool("pool0");
+        }
+        boolean modified = false;
+        Gson gson = new Gson();
+        for (; pool != null; pool = loot.getPool("pool" + i)) {
+            LootEntry entry = pool.getEntry("minecraft:compass");
+            if (entry != null) {
+                FMLLog.info("found compass entry");
+                modified = true;
+
+                pool.removeEntry("minecraft:compass");
+                LootEntry newEntry = new LootEntryItem(compassPersonal, 1, 0, new LootFunction[0], new LootCondition[0], Reference.MODID + ":compass_personal");
+                pool.addEntry(newEntry);
+            }
+            i++;
+        }
     }
 }
