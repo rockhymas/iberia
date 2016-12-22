@@ -6,7 +6,7 @@
  * Iberia is Open Source and distributed under the
  * CC-BY-NC-SA 4.0 License: https://creativecommons.org/licenses/by-nc-sa/4.0/
  */
- package com.gibraltar.iberia.world;
+package com.gibraltar.iberia.world;
 
 import java.util.Iterator;
 import java.util.Random;
