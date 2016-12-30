@@ -257,7 +257,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         iberiaData.setInteger("SpawnZ", spawn.getZ());
     }
 
-    private BlockPos getPlayerIberiaSpawn(EntityPlayer player) {
+    public static BlockPos getPlayerIberiaSpawn(EntityPlayer player) {
         NBTTagCompound iberiaData = getPlayerIberiaData(player);
 
         if (!iberiaData.hasKey("SpawnX", 99) || !iberiaData.hasKey("SpawnY", 99) || !iberiaData.hasKey("SpawnZ", 99)) {
@@ -271,7 +271,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         return new BlockPos(iberiaData.getInteger("SpawnX"), iberiaData.getInteger("SpawnY"), iberiaData.getInteger("SpawnZ"));
     }
 
-    private NBTTagCompound getPlayerIberiaData(EntityPlayer player) {
+    public static NBTTagCompound getPlayerIberiaData(EntityPlayer player) {
         NBTTagCompound entityData = player.getEntityData();
         NBTTagCompound modData;
         NBTTagCompound iberiaData;

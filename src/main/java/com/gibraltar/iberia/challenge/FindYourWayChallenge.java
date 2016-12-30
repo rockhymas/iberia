@@ -42,6 +42,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.gibraltar.iberia.items.ItemPersonalCompass;
+import com.gibraltar.iberia.challenge.DeathWithConsequencesChallenge;
 import com.gibraltar.iberia.network.MessageRegistry;
 import com.gibraltar.iberia.network.MessageGetPlayerSpawn;
 import com.gibraltar.iberia.Reference;
@@ -67,17 +68,11 @@ public class FindYourWayChallenge extends Challenge {
     }
 
     @SubscribeEvent
-    public void onPlayerSpawnSet(PlayerSetSpawnEvent event) {
-        if (!event.isForced()) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
     @SideOnly(Side.SERVER)
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         if (event.crafting.getItem() instanceof ItemPersonalCompass) {
             BlockPos pos = event.player.getBedLocation(0);
+            pos = DeathWithConsequencesChallenge.getPlayerIberiaSpawn(event.player);
             ItemPersonalCompass.setCompassSpawn(event.crafting, pos.getX(), pos.getZ());
         }
     }
