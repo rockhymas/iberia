@@ -32,7 +32,7 @@ public class MessageGetPlayerSpawn implements IMessage, IMessageHandler<MessageG
     @Override
     public IMessage onMessage(MessageGetPlayerSpawn message, MessageContext ctx) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-        final WorldServer world = (WorldServer) player.worldObj;
+        final WorldServer world = (WorldServer) player.world;
         world.addScheduledTask(new Runnable() {
             @Override
             public void run() {

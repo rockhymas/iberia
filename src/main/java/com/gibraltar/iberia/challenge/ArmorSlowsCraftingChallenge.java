@@ -118,7 +118,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		}
 
 		timeGuiOpened = Minecraft.getSystemTime();
-		Iterable<ItemStack> armorInventory = Minecraft.getMinecraft().thePlayer.getArmorInventoryList();
+		Iterable<ItemStack> armorInventory = Minecraft.getMinecraft().player.getArmorInventoryList();
 		armorDelayMs = 0;
 
 		for (Object item : armorInventory) {
@@ -216,7 +216,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 			!(gui instanceof InventoryEffectRenderer) &&
 			!(gui instanceof GuiMerchant) &&
 			!(gui instanceof GuiScreenHorseInventory) &&
-			!gui.mc.thePlayer.isCreative();
+			!gui.mc.player.isCreative();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -256,7 +256,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
     @SideOnly(Side.CLIENT)
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
-		if (!quickArmorSwapEnabled || event.getTarget().worldObj.isRemote) {
+		if (!quickArmorSwapEnabled || event.getTarget().world.isRemote) {
 			return;
 		}
 

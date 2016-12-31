@@ -79,7 +79,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
 
         EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
         BlockPos playerPos = new BlockPos(player);
-        World world = player.worldObj;
+        World world = player.world;
         WorldProvider worldProvider = world.provider;
         int respawnDimension = worldProvider.getRespawnDimension(player);
 
@@ -205,16 +205,16 @@ public class DeathWithConsequencesChallenge extends Challenge {
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         // TODO: may need to get rid of this
         MinecraftServer server = event.player.getServer();
-        long i = server.worldServers[0].getWorldInfo().getWorldTime() + 24000L;
+        long i = server.worlds[0].getWorldInfo().getWorldTime() + 24000L;
         setAllWorldTimes(server, i - i % 24000L);
         FMLLog.info("on player respawn");
     }
 
     private void setAllWorldTimes(MinecraftServer server, long time)
     {
-        for (int i = 0; i < server.worldServers.length; ++i)
+        for (int i = 0; i < server.worlds.length; ++i)
         {
-            server.worldServers[i].setWorldTime((long)time);
+            server.worlds[i].setWorldTime((long)time);
         }
     }
 
@@ -222,13 +222,15 @@ public class DeathWithConsequencesChallenge extends Challenge {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         // Ensure that player iberia spawn is set to world iberia spawn
         EntityPlayer player = event.player;
-        World world = player.worldObj;
+        World world = player.world;
 
         NBTTagCompound iberiaData = getPlayerIberiaData(player);
         if (iberiaData.hasKey("SpawnX")) {
             FMLLog.info("player iberia spawn already set");
             return;
         }
+
+        FMLLog.info("empty: " + player.inventory.mainInventory.get(0).isEmpty());
 
         int respawnDimension = world.provider.getRespawnDimension((EntityPlayerMP)player);
         BlockPos spawn = getPlayerIberiaSpawn(player); // will get world iberia spawn as default
@@ -261,7 +263,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         NBTTagCompound iberiaData = getPlayerIberiaData(player);
 
         if (!iberiaData.hasKey("SpawnX", 99) || !iberiaData.hasKey("SpawnY", 99) || !iberiaData.hasKey("SpawnZ", 99)) {
-            BlockPos spawn = IberiaSpawnData.get(player.worldObj).getSpawn();
+            BlockPos spawn = IberiaSpawnData.get(player.world).getSpawn();
             iberiaData.setInteger("SpawnX", spawn.getX());
             iberiaData.setInteger("SpawnY", spawn.getY());
             iberiaData.setInteger("SpawnZ", spawn.getZ());

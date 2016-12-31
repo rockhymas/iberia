@@ -65,7 +65,7 @@ public class ItemPersonalCompass extends Item {
                     Entity entity = flag ? entityIn : stack.getItemFrame();
 
                     if (worldIn == null) {
-                        worldIn = entity.worldObj;
+                        worldIn = entity.world;
                     }
 
                     BlockPos destinationPos = getCompassSpawn(stack);
@@ -112,7 +112,7 @@ public class ItemPersonalCompass extends Item {
                     w.lastUpdateTick = world.getTotalWorldTime();
                     double d0 = angle - w.rotation;
                     d0 = d0 % (Math.PI * 2D);
-                    d0 = MathHelper.clamp_double(d0, -1.0D, 1.0D);
+                    d0 = MathHelper.clamp(d0, -1.0D, 1.0D);
                     w.rota += d0 * 0.1D;
                     w.rota *= 0.8D;
                     w.rotation += w.rota;
@@ -159,7 +159,7 @@ public class ItemPersonalCompass extends Item {
 	}
 
     public static boolean verifyNBT(ItemStack stack) {
-		if (stack == null || stack.func_190926_b()) {
+		if (stack == null || stack.isEmpty()) {
             return false;
         }
         if (!(stack.getItem() instanceof ItemPersonalCompass)) {

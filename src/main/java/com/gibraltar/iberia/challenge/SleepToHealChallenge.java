@@ -9,6 +9,7 @@
 package com.gibraltar.iberia.challenge;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameRules;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -56,7 +57,7 @@ public class SleepToHealChallenge extends Challenge {
         if (event.shouldSetSpawn() && !event.updateWorld()) {
             EntityPlayer player = event.getEntityPlayer();
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
-                switch (player.worldObj.getDifficulty()) {
+                switch (player.world.getDifficulty()) {
                     case HARD:
                         player.heal(healAmountHard);
                         break;
