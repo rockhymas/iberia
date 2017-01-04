@@ -68,20 +68,28 @@ public class ItemPersonalCompass extends Item {
                         worldIn = entity.world;
                     }
 
+                    double d0;
                     BlockPos destinationPos = getCompassSpawn(stack);
                     if (destinationPos == null) {
                         MessageRegistry.network.sendToServer(new MessageGetPlayerSpawn());
                         return 0F;
                     }
-                    double d0;
 
-                    if (destinationPos != null) {
-                        double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
-                        d1 = d1 % 360.0D;
-                        double d2 = getPosToAngle(worldIn, entity, destinationPos);
-                        d0 = Math.PI - ((d1 - 90.0D) * 0.01745329238474369D - d2);
-                    } else {
-                        d0 = Math.random() * (Math.PI * 2D);
+                    if (worldIn.provider.isSurfaceWorld()) {
+                        if (destinationPos != null) {
+                            double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
+                            d1 = d1 % 360.0D;
+                            double d2 = getPosToAngle(worldIn, entity, destinationPos);
+                            d0 = Math.PI - ((d1 - 90.0D) * 0.01745329238474369D - d2);
+                        } else {
+                            d0 = Math.random() * (Math.PI * 2D);
+                        }
+                    }
+                    else {
+                        d0 = (Math.random() - 0.5D) * 2D * Math.PI;
+                        // double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
+                        // d0 = Math.PI - (d1 % 360) / 360D * Math.PI * 2D;
+                        flag = false;
                     }
 
                     if (flag) {
