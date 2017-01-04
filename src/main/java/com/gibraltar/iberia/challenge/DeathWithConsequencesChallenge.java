@@ -47,6 +47,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
     private int distanceToNewSpawnHard = 1500;
     private int distanceToNewSpawnNormal = 1000;
     private int distanceToNewSpawnEasy = 500;
+    private int spawnBorderRadius = 10000;
 
     @Override
 	public boolean hasSubscriptions() {
@@ -63,6 +64,8 @@ public class DeathWithConsequencesChallenge extends Challenge {
         distanceToNewSpawnNormal = prop.getInt(1000);
         prop = config.get(name, "distanceToNewSpawnEasy", 500);
         distanceToNewSpawnEasy = prop.getInt(500);
+        prop = config.get(name, "spawnBorderRadius", 10000);
+        spawnBorderRadius = prop.getInt(10000);
 	}
 
     @SubscribeEvent
@@ -148,14 +151,18 @@ public class DeathWithConsequencesChallenge extends Challenge {
         angle = angle + Math.PI;
 
         // randomize angle +/- 90 degrees
-        FMLLog.info("spawn random seed: " + from.hashCode());
         Random random = new Random(from.hashCode());
         angle = angle + (random.nextDouble() - 0.5) * Math.PI * (degreeRange / 180);
-        FMLLog.info("spawn angle: " + angle);
 
         // use angle to find new point from which to search for a spawn
         BlockPos newSpawn = from.west((int)(Math.cos(angle) * distance));
         newSpawn = newSpawn.north((int)(Math.sin(angle) * distance));
+        // bound the new spawn within the spawn border radius
+        FMLLog.info("newSpawn: " + newSpawn);
+        int newX = Math.floorMod(newSpawn.getX() + spawnBorderRadius, spawnBorderRadius * 2) - spawnBorderRadius;
+        int newZ = Math.floorMod(newSpawn.getZ() + spawnBorderRadius, spawnBorderRadius * 2) - spawnBorderRadius;
+        newSpawn = new BlockPos(newX, newSpawn.getY(), newZ);
+        FMLLog.info("newSpawn bounded: " + newSpawn);
 
         return findSpawnPointNear(newSpawn, worldProvider, world);
     }
@@ -207,7 +214,6 @@ public class DeathWithConsequencesChallenge extends Challenge {
         MinecraftServer server = event.player.getServer();
         long i = server.worlds[0].getWorldInfo().getWorldTime() + 24000L;
         setAllWorldTimes(server, i - i % 24000L);
-        FMLLog.info("on player respawn");
     }
 
     private void setAllWorldTimes(MinecraftServer server, long time)
