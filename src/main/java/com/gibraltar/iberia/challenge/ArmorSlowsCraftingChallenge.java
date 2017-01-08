@@ -10,9 +10,12 @@ package com.gibraltar.iberia.challenge;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFarmland;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiHopper;
@@ -28,8 +31,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -37,17 +46,26 @@ import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -57,6 +75,9 @@ import com.gibraltar.iberia.Reference;
 import com.gibraltar.iberia.renderer.RenderArmorStandFactory;
 
 public class ArmorSlowsCraftingChallenge extends Challenge {
+	private static final UUID ARMOR_SPEED_SLOWDOWN_ID = UUID.fromString("26265dd9-6ebf-4b88-8876-81f338f4eaa5");
+    private static final AttributeModifier ARMOR_SPEED_SLOWDOWN = (new AttributeModifier(ARMOR_SPEED_SLOWDOWN_ID, "Armor speed slowdown", -0.30000001192092896D, 2)).setSaved(false);
+
 	private long timeGuiOpened;
 	private long armorDelayMs;
 	private int leatherDelay;
@@ -65,6 +86,9 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	private int goldDelay;
 	private int diamondDelay;
 	private boolean quickArmorSwapEnabled;
+
+	private int disableHoeAtLevel;
+	private int trampleCropsAtLevel;
 
     private final EntityEquipmentSlot[] slotsToSwap;
 
@@ -107,6 +131,12 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 
 		prop = config.get(name, "QuickArmorSwap", true);
         quickArmorSwapEnabled = prop.getBoolean(true);
+
+		prop = config.get(name, "disableHoeAtLevel", 12);
+        disableHoeAtLevel = prop.getInt(12);
+
+		prop = config.get(name, "trampleCropsAtLevel", 13);
+        trampleCropsAtLevel = prop.getInt(13);
     }
 
 
@@ -302,4 +332,111 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 			}
         }
     }
+
+	@SubscribeEvent
+ 	@SideOnly(Side.CLIENT)
+	public void onUseHoe(UseHoeEvent event) {
+		if (event.getEntityPlayer().getTotalArmorValue() >= disableHoeAtLevel) {
+			World world = event.getWorld();
+			BlockPos pos = event.getPos();
+			IBlockState iblockstate = world.getBlockState(pos);
+            Block block = iblockstate.getBlock();
+
+			if (world.isAirBlock(pos.up()) && (block == Blocks.GRASS || block == Blocks.GRASS_PATH)) {
+				world.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				event.setResult(Event.Result.ALLOW);
+				if (!world.isRemote)
+				{
+					world.setBlockState(pos, Blocks.DIRT.getDefaultState(), 11);
+				}
+			}
+			else {
+				event.setCanceled(true);
+			}
+		}
+	}
+
+	// @SubscribeEvent
+ 	// @SideOnly(Side.CLIENT)
+	// public void onEquipmentChange(LivingEquipmentChangeEvent event) {
+	// 	wearingGoldArmor = isWearingGoldArmor(event.getEntityLiving().getArmorInventoryList())
+	// }
+
+	private boolean isWearingGoldArmor(Iterable<ItemStack> armorInventory) {
+		boolean wearingGoldArmor = false;
+		for (Object item : armorInventory) {
+			ItemStack stack = (ItemStack) item;
+			if (stack == null || !(stack.getItem() instanceof ItemArmor)) {
+				continue;
+			}
+
+			ItemArmor armor = (ItemArmor)stack.getItem();
+			if (armor.getArmorMaterial() == ItemArmor.ArmorMaterial.GOLD) {
+				wearingGoldArmor = true;
+				break;
+			}
+	    }
+
+		return wearingGoldArmor;
+	}
+
+	@SubscribeEvent
+ 	@SideOnly(Side.CLIENT)
+	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+		if (event.phase == TickEvent.Phase.START) {
+			return;
+		}
+
+		EntityPlayer player = event.player;
+
+		boolean wearingGoldArmor = isWearingGoldArmor(player.getArmorInventoryList());
+		IAttributeInstance iattributeinstance = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+        if (iattributeinstance.getModifier(ARMOR_SPEED_SLOWDOWN_ID) != null)
+        {
+            iattributeinstance.removeModifier(ARMOR_SPEED_SLOWDOWN);
+        }
+
+        if (wearingGoldArmor)
+        {
+            iattributeinstance.applyModifier(ARMOR_SPEED_SLOWDOWN);
+        }
+
+		if (player.getTotalArmorValue() >= trampleCropsAtLevel && player.onGround) {
+			// If we're standing on farmland, change it to dirt
+			int x = MathHelper.floor(player.posX);
+            int y = MathHelper.floor(player.posY - 0.20000000298023224D);
+            int z = MathHelper.floor(player.posZ);
+            BlockPos blockpos = new BlockPos(x, y, z);
+            IBlockState iblockstate = player.world.getBlockState(blockpos);
+
+			if (iblockstate.getBlock() instanceof BlockFarmland) {
+				player.move(MoverType.SELF, 0D, 0.1D, 0D);
+				player.world.setBlockState(blockpos, Blocks.DIRT.getDefaultState());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onEnchantmentLevelSet(EnchantmentLevelSetEvent event) {
+		if (event.getLevel() <= 22) {
+			return;
+		}
+
+		int goldArmorItems = 0;
+		for (Object item : Minecraft.getMinecraft().player.getArmorInventoryList()) {
+			ItemStack stack = (ItemStack) item;
+			if (stack == null || !(stack.getItem() instanceof ItemArmor)) {
+				continue;
+			}
+
+			ItemArmor armor = (ItemArmor)stack.getItem();
+			if (armor.getArmorMaterial() == ItemArmor.ArmorMaterial.GOLD) {
+				goldArmorItems++;
+			}
+	    }
+
+		event.setLevel(22 + goldArmorItems*2);
+	}
 }
