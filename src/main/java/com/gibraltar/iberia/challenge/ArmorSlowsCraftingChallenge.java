@@ -59,6 +59,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -87,8 +88,9 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	private int diamondDelay;
 	private boolean quickArmorSwapEnabled;
 
-	private int disableHoeAtLevel;
 	private int trampleCropsAtLevel;
+	private int disableJumpBlockPlacementAtLevel;
+	private int eachGoldUnlocksEnchantmentLevels;
 
     private final EntityEquipmentSlot[] slotsToSwap;
 
@@ -132,11 +134,14 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 		prop = config.get(name, "QuickArmorSwap", true);
         quickArmorSwapEnabled = prop.getBoolean(true);
 
-		prop = config.get(name, "disableHoeAtLevel", 12);
-        disableHoeAtLevel = prop.getInt(12);
-
 		prop = config.get(name, "trampleCropsAtLevel", 13);
         trampleCropsAtLevel = prop.getInt(13);
+
+		prop = config.get(name, "disableJumpBlockPlacementAtLevel", 13);
+        disableJumpBlockPlacementAtLevel = prop.getInt(13);
+
+		prop = config.get(name, "eachGoldUnlocksEnchantmentLevels", 2);
+        eachGoldUnlocksEnchantmentLevels = prop.getInt(2);
     }
 
 
@@ -333,35 +338,6 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
         }
     }
 
-	@SubscribeEvent
- 	@SideOnly(Side.CLIENT)
-	public void onUseHoe(UseHoeEvent event) {
-		if (event.getEntityPlayer().getTotalArmorValue() >= disableHoeAtLevel) {
-			World world = event.getWorld();
-			BlockPos pos = event.getPos();
-			IBlockState iblockstate = world.getBlockState(pos);
-            Block block = iblockstate.getBlock();
-
-			if (world.isAirBlock(pos.up()) && (block == Blocks.GRASS || block == Blocks.GRASS_PATH)) {
-				world.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
-				event.setResult(Event.Result.ALLOW);
-				if (!world.isRemote)
-				{
-					world.setBlockState(pos, Blocks.DIRT.getDefaultState(), 11);
-				}
-			}
-			else {
-				event.setCanceled(true);
-			}
-		}
-	}
-
-	// @SubscribeEvent
- 	// @SideOnly(Side.CLIENT)
-	// public void onEquipmentChange(LivingEquipmentChangeEvent event) {
-	// 	wearingGoldArmor = isWearingGoldArmor(event.getEntityLiving().getArmorInventoryList())
-	// }
-
 	private boolean isWearingGoldArmor(Iterable<ItemStack> armorInventory) {
 		boolean wearingGoldArmor = false;
 		for (Object item : armorInventory) {
@@ -420,7 +396,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onEnchantmentLevelSet(EnchantmentLevelSetEvent event) {
-		if (event.getLevel() <= 22) {
+		if (event.getLevel() <= 30 - eachGoldUnlocksEnchantmentLevels * 4) {
 			return;
 		}
 
@@ -437,6 +413,19 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 			}
 	    }
 
-		event.setLevel(22 + goldArmorItems*2);
+		event.setLevel(30 - (eachGoldUnlocksEnchantmentLevels * (4 - goldArmorItems)));
 	}
+
+	@SubscribeEvent
+	public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+		boolean itemIsBlock = event.getItemStack() != null && event.getItemStack().getItem() instanceof ItemBlock;
+		if (event.getEntityPlayer().onGround || !itemIsBlock) {
+			return;
+		}
+
+		if (event.getEntityPlayer().getTotalArmorValue() >= disableJumpBlockPlacementAtLevel) {
+			event.setUseItem(Event.Result.DENY);
+		}
+	}
+
 }
