@@ -52,12 +52,12 @@ public class SleepToHealChallenge extends Challenge {
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
-		Property prop = config.get(name, "HealAmountHard", 2.0D);
-        healAmountHard = (float)prop.getDouble(2.0D);
-		prop = config.get(name, "HealAmountNormal", 4.0D);
-        healAmountNormal = (float)prop.getDouble(4.0D);
-		prop = config.get(name, "HealAmountEasy", 6.0D);
-        healAmountEasy = (float)prop.getDouble(6.0D);
+		Property prop = config.get(name, "HealAmountHard", 3.0D);
+        healAmountHard = (float)prop.getDouble(3.0D);
+		prop = config.get(name, "HealAmountNormal", 6.0D);
+        healAmountNormal = (float)prop.getDouble(6.0D);
+		prop = config.get(name, "HealAmountEasy", 9.0D);
+        healAmountEasy = (float)prop.getDouble(9.0D);
     }
 
 	@SubscribeEvent
@@ -79,7 +79,7 @@ public class SleepToHealChallenge extends Challenge {
             long time = server.worlds[0].getWorldInfo().getWorldTime();
             setPlayerSleepTime(player, time);
             FMLLog.info("setting player sleep time: " + time);
-            
+
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
                 switch (player.world.getDifficulty()) {
                     case HARD:
