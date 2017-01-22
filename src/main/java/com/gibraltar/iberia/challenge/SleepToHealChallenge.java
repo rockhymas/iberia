@@ -8,13 +8,19 @@
  */
 package com.gibraltar.iberia.challenge;
 
+import java.util.Random;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -29,6 +35,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
 
 public class SleepToHealChallenge extends Challenge {
@@ -71,6 +78,8 @@ public class SleepToHealChallenge extends Challenge {
             MinecraftServer server = player.getServer();
             long time = server.worlds[0].getWorldInfo().getWorldTime();
             setPlayerSleepTime(player, time);
+            FMLLog.info("setting player sleep time: " + time);
+            
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
                 switch (player.world.getDifficulty()) {
                     case HARD:
@@ -97,10 +106,11 @@ public class SleepToHealChallenge extends Challenge {
         MinecraftServer server = player.getServer();
         long time = server.worlds[0].getWorldInfo().getWorldTime();
 
-        if (!player.world.isDaytime() && getPlayerSleepTime(player) > time - 12000L) {
+        if (!player.world.isDaytime() && hasPlayerSleptTonight(player, time)) {
             player.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.alreadySlept", new Object[0]), true);
             event.setResult(EntityPlayer.SleepResult.OTHER_PROBLEM);
         }
+        setPlayerSleptWell(player, checkIfPlayerSleptWell(player, event.getPos()));
     }
 
     @SubscribeEvent
@@ -109,17 +119,24 @@ public class SleepToHealChallenge extends Challenge {
             return;
         }
 
-        if (event.world.getTotalWorldTime() % 20 != 0 || event.world.isDaytime()) { // check once a second
+        if (event.world.isDaytime()) {
             return;
         }
 
         WorldServer world = (WorldServer) event.world;
         long time = world.getWorldTime();
 
+        long lastWorldSleep = IberiaWorldData.get(world).getLastSleepTime();
+        if (lastWorldSleep < time && lastWorldSleep > time - 12000) {
+            // Everyone has slept tonight alreadySlept
+            return;
+        }
+
         if (!world.playerEntities.isEmpty())
         {
             int spectators = 0;
             int slept = 0;
+            boolean allSleptWell = true;
 
             for (EntityPlayer entityplayer : world.playerEntities)
             {
@@ -129,18 +146,24 @@ public class SleepToHealChallenge extends Challenge {
                 }
                 else if (hasPlayerSleptTonight(entityplayer, time))
                 {
+                    if (entityplayer.isPlayerFullyAsleep()) {
+                        setPlayerSleptWell(entityplayer, checkIfPlayerSleptWell(entityplayer, new BlockPos(entityplayer)));
+                    }
+                    allSleptWell = allSleptWell && getPlayerSleptWell(entityplayer);
                     ++slept;
                 }
             }
 
             boolean allPlayersSlept = slept > 0 && slept >= world.playerEntities.size() - spectators;
-            FMLLog.info("all players slept: " + allPlayersSlept);
 
             if (allPlayersSlept) {
                 if (world.getGameRules().getBoolean("doDaylightCycle"))
                 {
                     long i = world.getWorldTime() + 24000L;
-                    world.setWorldTime(i - i % 24000L);
+                    long nextDayBreak = i - i % 24000L;
+                    long wakeTime = allSleptWell ? nextDayBreak : (nextDayBreak - world.getWorldTime()) / 2 + world.getWorldTime();
+                    world.setWorldTime(wakeTime);
+                    IberiaWorldData.get(world).setLastSleepTime(wakeTime);
                 }
 
                 for (EntityPlayer entityplayer : world.playerEntities)
@@ -148,10 +171,18 @@ public class SleepToHealChallenge extends Challenge {
                     if (entityplayer.isPlayerSleeping())
                     {
                         entityplayer.wakeUpPlayer(false, false, true);
+                        if (!allSleptWell) {
+                            if (getPlayerSleptWell(entityplayer)) {
+                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.badDream", new Object[0]), true);
+                            }
+                            else {
+                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.wokenByZombies", new Object[0]), true);
+                            }
+                        }
                     }
                 }
 
-                if (world.getGameRules().getBoolean("doWeatherCycle"))
+                if (world.getGameRules().getBoolean("doWeatherCycle") && allSleptWell)
                 {
                     world.provider.resetRainAndThunder();
                 }
@@ -159,9 +190,36 @@ public class SleepToHealChallenge extends Challenge {
         }
     }
 
+    private boolean checkIfPlayerSleptWell(EntityPlayer player, BlockPos pos) {
+        boolean bedCovered = true;
+        for (int i = -1; i <= 1 && bedCovered; i++)
+            for (int k = -1; k <= 1 && bedCovered; k++)
+                if (player.world.canSeeSky(pos.add(i, 2, k)))
+                    bedCovered = false;
+
+        boolean spawnableBlock = false;
+        for (int i = -5; i <= 5 && !spawnableBlock; i++)
+            for (int j = -3; j <= 3 && !spawnableBlock; j++)
+                for (int k = -5; k <= 5 && !spawnableBlock; k++) {
+                    BlockPos checkPos = pos.add(i, j, k);
+                    IBlockState state = player.world.getBlockState(checkPos);
+                    BlockPos belowPos = checkPos.down();
+                    IBlockState stateBelow = player.world.getBlockState(belowPos);
+                    if (player.world.getLightFor(EnumSkyBlock.BLOCK, checkPos) < 8 &&
+                        stateBelow.getBlock().canCreatureSpawn(stateBelow, player.world, belowPos, EntityLiving.SpawnPlacementType.ON_GROUND) &&
+                        WorldEntitySpawner.isValidEmptySpawnBlock(player.world.getBlockState(checkPos)) &&
+                        WorldEntitySpawner.isValidEmptySpawnBlock(player.world.getBlockState(checkPos.up()))) {
+                             spawnableBlock = true;
+                        }
+                }
+
+        FMLLog.info("bed covered: " + bedCovered + ", spawnable block: " + spawnableBlock);
+        return bedCovered && !spawnableBlock ? true : new Random().nextDouble() > 0.5F;
+    }
+
     private boolean hasPlayerSleptTonight(EntityPlayer player, long time) {
-        FMLLog.info("player slept time: " + getPlayerSleepTime(player) + " time: " + time);
-        return getPlayerSleepTime(player) > time - 12000L || player.isPlayerFullyAsleep();
+        long playerSleepTime = getPlayerSleepTime(player);
+        return (playerSleepTime <= time && playerSleepTime > time - 12000L) || player.isPlayerFullyAsleep();
     }
 
     private void setPlayerSleepTime(EntityPlayer player, long time) {
@@ -179,6 +237,23 @@ public class SleepToHealChallenge extends Challenge {
         }
 
         return iberiaData.getLong("SleptAt");
+    }
+
+    private void setPlayerSleptWell(EntityPlayer player, boolean sleptWell) {
+        NBTTagCompound iberiaData = getPlayerIberiaNPData(player);
+        
+        iberiaData.setBoolean("SleptWell", sleptWell);
+    }
+
+    private boolean getPlayerSleptWell(EntityPlayer player) {
+        NBTTagCompound iberiaData = getPlayerIberiaNPData(player);
+
+        if (!iberiaData.hasKey("SleptWell", 99)) {
+            iberiaData.setBoolean("SleptWell", true);
+            return true;
+        }
+
+        return iberiaData.getBoolean("SleptWell");
     }
 
     public NBTTagCompound getPlayerIberiaNPData(EntityPlayer player) {

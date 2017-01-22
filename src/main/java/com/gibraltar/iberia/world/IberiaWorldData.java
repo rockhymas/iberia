@@ -17,12 +17,13 @@ import net.minecraftforge.fml.common.FMLLog;
 
 import com.gibraltar.iberia.Reference;
 
-public class IberiaSpawnData extends WorldSavedData {
+public class IberiaWorldData extends WorldSavedData {
     private int spawnX;
     private int spawnY;
     private int spawnZ;
+    private long lastSleepTime;
 
-    public IberiaSpawnData(String dataIdentifier) {
+    public IberiaWorldData(String dataIdentifier) {
         super(dataIdentifier);
     }
 
@@ -31,6 +32,10 @@ public class IberiaSpawnData extends WorldSavedData {
         spawnY = nbt.getInteger("SpawnY");
         spawnZ = nbt.getInteger("SpawnZ");
         FMLLog.info("reading iberia world spawn data: " + getSpawn());
+
+        if (nbt.hasKey("lastSleepTime", 99)) {
+            lastSleepTime = nbt.getLong("lastSleepTime");
+        }
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -38,6 +43,7 @@ public class IberiaSpawnData extends WorldSavedData {
         nbt.setInteger("SpawnX", spawnX);
         nbt.setInteger("SpawnY", spawnY);
         nbt.setInteger("SpawnZ", spawnZ);
+        nbt.setLong("lastSleepTime", lastSleepTime);
         return nbt;
     }
 
@@ -52,15 +58,25 @@ public class IberiaSpawnData extends WorldSavedData {
         markDirty();
     }
 
-    public static IberiaSpawnData get(World world) {
+    public long getLastSleepTime() {
+        return lastSleepTime;
+    }
+
+    public void setLastSleepTime(long lastSleepTime) {
+        this.lastSleepTime = lastSleepTime;
+        markDirty();
+    }
+
+    public static IberiaWorldData get(World world) {
         MapStorage storage = world.getMapStorage();
-        IberiaSpawnData instance = (IberiaSpawnData) storage.getOrLoadData(IberiaSpawnData.class, Reference.MODID);
+        IberiaWorldData instance = (IberiaWorldData) storage.getOrLoadData(IberiaWorldData.class, Reference.MODID);
 
         if (instance == null) {
             FMLLog.info("creating iberia world spawn data");
-            instance = new IberiaSpawnData(Reference.MODID);
+            instance = new IberiaWorldData(Reference.MODID);
             BlockPos spawnPoint = world.getSpawnPoint();
             instance.setSpawn(spawnPoint);
+            instance.setLastSleepTime(0);
             storage.setData(Reference.MODID, instance);
         }
 

@@ -40,7 +40,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.gibraltar.iberia.world.IberiaSpawnData;
+import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
 
 public class DeathWithConsequencesChallenge extends Challenge {
@@ -254,7 +254,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         int distanceToNewSpawn = getDistanceToNextSpawn(world);
         spawn = findNextSpawnPoint(world.provider, world, spawn, null, distanceToNewSpawn);
         FMLLog.info("new iberia world spawn: " + spawn);
-        IberiaSpawnData.get(world).setSpawn(spawn);
+        IberiaWorldData.get(world).setSpawn(spawn);
     }
 
     private void setPlayerIberiaSpawn(EntityPlayer player, BlockPos spawn) {
@@ -269,7 +269,7 @@ public class DeathWithConsequencesChallenge extends Challenge {
         NBTTagCompound iberiaData = getPlayerIberiaData(player);
 
         if (!iberiaData.hasKey("SpawnX", 99) || !iberiaData.hasKey("SpawnY", 99) || !iberiaData.hasKey("SpawnZ", 99)) {
-            BlockPos spawn = IberiaSpawnData.get(player.world).getSpawn();
+            BlockPos spawn = IberiaWorldData.get(player.world).getSpawn();
             iberiaData.setInteger("SpawnX", spawn.getX());
             iberiaData.setInteger("SpawnY", spawn.getY());
             iberiaData.setInteger("SpawnZ", spawn.getZ());
