@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
 
-public class DeathWithConsequencesChallenge extends Challenge {
+public class SpawnChallenge extends Challenge {
     private int distanceToNewSpawnHard = 1500;
     private int distanceToNewSpawnNormal = 1000;
     private int distanceToNewSpawnEasy = 500;

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.HashMap;
 import javax.annotation.Nullable;
 
-import com.gibraltar.iberia.challenge.FindYourWayChallenge;
+import com.gibraltar.iberia.challenge.NavigationChallenge;
 import com.gibraltar.iberia.network.MessageRegistry;
 import com.gibraltar.iberia.network.MessageGetPlayerSpawn;
 import com.gibraltar.iberia.Reference;

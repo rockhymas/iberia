@@ -80,7 +80,7 @@ import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.Reference;
 import com.gibraltar.iberia.renderer.RenderArmorStandFactory;
 
-public class ArmorSlowsCraftingChallenge extends Challenge {
+public class ArmorChallenge extends Challenge {
 	private static final UUID ARMOR_SPEED_SLOWDOWN_ID = UUID.fromString("26265dd9-6ebf-4b88-8876-81f338f4eaa5");
     private static final AttributeModifier ARMOR_SPEED_SLOWDOWN = (new AttributeModifier(ARMOR_SPEED_SLOWDOWN_ID, "Armor speed slowdown", -0.30000001192092896D, 2)).setSaved(false);
 
@@ -104,7 +104,7 @@ public class ArmorSlowsCraftingChallenge extends Challenge {
 
     private final EntityEquipmentSlot[] slotsToSwap;
 
-    public ArmorSlowsCraftingChallenge() {
+    public ArmorChallenge() {
         slotsToSwap = new EntityEquipmentSlot[5];
         slotsToSwap[0] = EntityEquipmentSlot.OFFHAND;
         slotsToSwap[1] = EntityEquipmentSlot.HEAD;

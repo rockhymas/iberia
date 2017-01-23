@@ -19,12 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,11 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
 
-public class SleepToHealChallenge extends Challenge {
-    private float healAmountHard;
-    private float healAmountNormal;
-    private float healAmountEasy;
-
+public class SleepChallenge extends Challenge {
     @Override
     public boolean hasSubscriptions() {
         return true;
@@ -51,19 +45,6 @@ public class SleepToHealChallenge extends Challenge {
     @Override
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
-
-		Property prop = config.get(name, "HealAmountHard", 3.0D);
-        healAmountHard = (float)prop.getDouble(3.0D);
-		prop = config.get(name, "HealAmountNormal", 6.0D);
-        healAmountNormal = (float)prop.getDouble(6.0D);
-		prop = config.get(name, "HealAmountEasy", 9.0D);
-        healAmountEasy = (float)prop.getDouble(9.0D);
-    }
-
-	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event) {
-        GameRules rules = event.getWorld().getGameRules();
-        rules.setOrCreateGameRule("naturalRegeneration", "false");
     }
 
     @SubscribeEvent
@@ -79,20 +60,6 @@ public class SleepToHealChallenge extends Challenge {
             long time = server.worlds[0].getWorldInfo().getWorldTime();
             setPlayerSleepTime(player, time);
             FMLLog.info("setting player sleep time: " + time);
-
-            if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
-                switch (player.world.getDifficulty()) {
-                    case HARD:
-                        player.heal(healAmountHard);
-                        break;
-                    case NORMAL:
-                        player.heal(healAmountNormal);
-                        break;
-                    case EASY:
-                        player.heal(healAmountEasy);
-                        break;
-                }
-            }
         }
     }
 

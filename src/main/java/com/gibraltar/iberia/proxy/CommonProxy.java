@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.gibraltar.iberia.challenge.Challenge;
-import com.gibraltar.iberia.challenge.HardStoneChallenge;
-import com.gibraltar.iberia.challenge.FindYourWayChallenge;
-import com.gibraltar.iberia.challenge.SleepToHealChallenge;
-import com.gibraltar.iberia.challenge.ArmorSlowsCraftingChallenge;
-import com.gibraltar.iberia.challenge.DeathWithConsequencesChallenge;
+import com.gibraltar.iberia.challenge.StoneChallenge;
+import com.gibraltar.iberia.challenge.NavigationChallenge;
+import com.gibraltar.iberia.challenge.SleepChallenge;
+import com.gibraltar.iberia.challenge.ArmorChallenge;
+import com.gibraltar.iberia.challenge.SpawnChallenge;
 import com.gibraltar.iberia.network.MessageRegistry;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -38,11 +38,11 @@ public class CommonProxy {
 		config.load();
 
         challenges = new ArrayList();
-        challenges.add(new HardStoneChallenge());
-        challenges.add(new SleepToHealChallenge());
-        challenges.add(new ArmorSlowsCraftingChallenge());
-        challenges.add(new FindYourWayChallenge());
-        challenges.add(new DeathWithConsequencesChallenge());
+        challenges.add(new StoneChallenge());
+        challenges.add(new SleepChallenge());
+        challenges.add(new ArmorChallenge());
+        challenges.add(new NavigationChallenge());
+        challenges.add(new SpawnChallenge());
 
         forEachChallenge(challenge -> challenge.loadConfig(config));
 
