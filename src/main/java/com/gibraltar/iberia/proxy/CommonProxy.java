@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.gibraltar.iberia.challenge.Challenge;
-import com.gibraltar.iberia.challenge.StoneChallenge;
+import com.gibraltar.iberia.challenge.ArmorChallenge;
+import com.gibraltar.iberia.challenge.HealingChallenge;
 import com.gibraltar.iberia.challenge.NavigationChallenge;
 import com.gibraltar.iberia.challenge.SleepChallenge;
-import com.gibraltar.iberia.challenge.ArmorChallenge;
 import com.gibraltar.iberia.challenge.SpawnChallenge;
+import com.gibraltar.iberia.challenge.StoneChallenge;
 import com.gibraltar.iberia.network.MessageRegistry;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -43,6 +44,7 @@ public class CommonProxy {
         challenges.add(new ArmorChallenge());
         challenges.add(new NavigationChallenge());
         challenges.add(new SpawnChallenge());
+        challenges.add(new HealingChallenge());
 
         forEachChallenge(challenge -> challenge.loadConfig(config));
 
@@ -72,5 +74,17 @@ public class CommonProxy {
 
     private void forEachChallenge(Consumer<Challenge> action) {
 	    challenges.forEach(action);
+    }
+
+    public boolean isChallengeEnabled(Class clazz) {
+        boolean enabled = false;
+        for (int i = 0; i < challenges.size(); i++) {
+            Challenge challenge = (Challenge)challenges.get(i);
+            if (clazz.isInstance(challenge)) {
+                enabled = challenge.enabled;
+            }
+        }
+
+        return enabled;
     }
 }

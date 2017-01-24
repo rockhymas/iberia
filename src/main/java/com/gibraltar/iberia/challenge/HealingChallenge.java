@@ -19,7 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.FMLLog;
 
+import com.gibraltar.iberia.challenge.SleepChallenge;
 import com.gibraltar.iberia.Reference;
+import com.gibraltar.iberia.iberia;
 
 public class HealingChallenge extends Challenge {
     private float healAmountHard;
@@ -56,7 +58,7 @@ public class HealingChallenge extends Challenge {
             return;
         }
 
-        if (player.isPlayerFullyAsleep() /* TODO: check sleep challenge + daytime */) {
+        if (player.isPlayerFullyAsleep() && (iberia.proxy.isChallengeEnabled(SleepChallenge.class) || player.world.isDaytime())) {
             if (player.getHealth() < player.getMaxHealth() && !player.getFoodStats().needFood()) {
                 switch (player.world.getDifficulty()) {
                     case HARD:
