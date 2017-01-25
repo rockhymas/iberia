@@ -37,6 +37,9 @@ import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
 
 public class SleepChallenge extends Challenge {
+    private float probabilityToWakeUnprotected;
+    private float probabilityToWakeProtected;
+
     @Override
     public boolean hasSubscriptions() {
         return true;
@@ -45,6 +48,11 @@ public class SleepChallenge extends Challenge {
     @Override
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
+    
+        Property prop = config.get(name, "probabilityToWakeUnprotected", 0.5D);
+        probabilityToWakeUnprotected = (float)prop.getDouble(0.5D);
+        prop = config.get(name, "probabilityToWakeProtected", 0.01D);
+        probabilityToWakeProtected = (float)prop.getDouble(0.01D);
     }
 
     @SubscribeEvent
@@ -181,7 +189,8 @@ public class SleepChallenge extends Challenge {
                 }
 
         FMLLog.info("bed covered: " + bedCovered + ", spawnable block: " + spawnableBlock);
-        return bedCovered && !spawnableBlock ? true : new Random().nextDouble() > 0.5F;
+        float probabilityToWake = bedCovered && !spawnableBlock ? probabilityToWakeProtected : probabilityToWakeUnprotected;
+        return new Random().nextDouble() < probabilityToWake;
     }
 
     private boolean hasPlayerSleptTonight(EntityPlayer player, long time) {
