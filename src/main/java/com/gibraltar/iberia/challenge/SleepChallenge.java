@@ -67,7 +67,6 @@ public class SleepChallenge extends Challenge {
             MinecraftServer server = player.getServer();
             long time = server.worlds[0].getWorldInfo().getWorldTime();
             setPlayerSleepTime(player, time);
-            FMLLog.info("setting player sleep time: " + time);
         }
     }
 
@@ -184,13 +183,13 @@ public class SleepChallenge extends Challenge {
                         stateBelow.getBlock().canCreatureSpawn(stateBelow, player.world, belowPos, EntityLiving.SpawnPlacementType.ON_GROUND) &&
                         WorldEntitySpawner.isValidEmptySpawnBlock(player.world.getBlockState(checkPos)) &&
                         WorldEntitySpawner.isValidEmptySpawnBlock(player.world.getBlockState(checkPos.up()))) {
-                             spawnableBlock = true;
+                            spawnableBlock = true;
                         }
                 }
 
-        FMLLog.info("bed covered: " + bedCovered + ", spawnable block: " + spawnableBlock);
         float probabilityToWake = bedCovered && !spawnableBlock ? probabilityToWakeProtected : probabilityToWakeUnprotected;
-        return new Random().nextDouble() < probabilityToWake;
+        double rand = new Random().nextDouble();
+        return rand > probabilityToWake;
     }
 
     private boolean hasPlayerSleptTonight(EntityPlayer player, long time) {
