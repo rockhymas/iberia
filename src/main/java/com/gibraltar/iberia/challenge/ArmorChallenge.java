@@ -78,7 +78,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
 import com.gibraltar.iberia.Reference;
-import com.gibraltar.iberia.renderer.RenderArmorStandFactory;
 
 public class ArmorChallenge extends Challenge {
 	private static final UUID ARMOR_SPEED_SLOWDOWN_ID = UUID.fromString("26265dd9-6ebf-4b88-8876-81f338f4eaa5");
@@ -116,9 +115,6 @@ public class ArmorChallenge extends Challenge {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
-		if (quickArmorSwapEnabled && event.getSide() == Side.CLIENT) {
-			RenderingRegistry.registerEntityRenderingHandler(EntityArmorStand.class, new RenderArmorStandFactory());
-		}
 	}
 
 	@Override
