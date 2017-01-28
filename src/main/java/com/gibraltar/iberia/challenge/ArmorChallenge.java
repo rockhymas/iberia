@@ -140,8 +140,8 @@ public class ArmorChallenge extends Challenge {
 		prop = config.get(name, "QuickArmorSwap", true);
         quickArmorSwapEnabled = prop.getBoolean(true);
 
-		prop = config.get(name, "trampleCropsAtLevel", 13);
-        trampleCropsAtLevel = prop.getInt(13);
+		prop = config.get(name, "trampleCropsAtLevel", 12);
+        trampleCropsAtLevel = prop.getInt(12);
 
 		prop = config.get(name, "disableJumpBlockPlacementAtLevel", 13);
         disableJumpBlockPlacementAtLevel = prop.getInt(13);
@@ -152,8 +152,8 @@ public class ArmorChallenge extends Challenge {
 		prop = config.get(name, "slowAxesAtLevel", 15);
         slowAxesAtLevel = prop.getInt(15);
 
-		prop = config.get(name, "axeSlowdown", 10);
-        axeSlowdown = prop.getInt(10);
+		prop = config.get(name, "axeSlowdown", 5);
+        axeSlowdown = prop.getInt(5);
 
 		prop = config.get(name, "slowPickaxesAtLevel", 20);
         slowPickaxesAtLevel = prop.getInt(20);
