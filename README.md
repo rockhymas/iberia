@@ -5,7 +5,7 @@ The philosophy of Iberia is to make Minecraft harder in ways that respect the va
 experience, enhance gameplay, encourage more experiences that are available in the game, and add
 a dose of reality.
 
-Challenges
+Iberia 2
 ----------
 
 ### Iberian Stone
@@ -174,7 +174,7 @@ difficult to find the motivation to build in standard single player Minecraft.
 
 Links
 -----
-[Trailer](https://www.youtube.com/watch?v=zKrE4pOxdq4)
+[Trailer](https://www.youtube.com/watch?v=zKrE4pOxdq4) (for Iberia 1)
 
 [Download](https://minecraft.curseforge.com/projects/iberia)
 
@@ -187,6 +187,11 @@ Links
 [Gibraltar's Twitter](https://twitter.com/gibraltarmcd)
 
 [Gibraltar's Blog](http://gibraltar.rockhymas.com/)
+
+Iberia 1
+--------
+
+
 
 License
 -------
