@@ -43,12 +43,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
-import com.gibraltar.iberia.challenge.HardStoneChallenge;
 import com.gibraltar.iberia.world.HardStoneGenerator;
 
 
 
-public class HardStoneChallenge extends Challenge {
+public class StoneChallenge extends Challenge {
 	public static Block hard_stone;
 	Map<String, Float> slowdowns;
 	
@@ -91,7 +90,7 @@ public class HardStoneChallenge extends Challenge {
 
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-		if (event.getState().getBlock() != HardStoneChallenge.hard_stone) {
+		if (event.getState().getBlock() != StoneChallenge.hard_stone) {
 			return;
 		}
 
@@ -145,15 +144,15 @@ public class HardStoneChallenge extends Challenge {
 							IBlockState iblockstate = extendedblockstorage.get(k1, i2, l1);
 							Block block = iblockstate.getBlock();
 
-							if (block == Blocks.STONE || block == HardStoneChallenge.hard_stone)
+							if (block == Blocks.STONE || block == StoneChallenge.hard_stone)
 							{
 								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
-								boolean hard = block == HardStoneChallenge.hard_stone;
+								boolean hard = block == StoneChallenge.hard_stone;
 								boolean shouldBeHard = BlockHardStone.isSurroundedByCompressingBlocks(event.world, pos, false);
 
 								if (hard != shouldBeHard)
 								{
-									Block newBlock = shouldBeHard ? HardStoneChallenge.hard_stone : Blocks.STONE;
+									Block newBlock = shouldBeHard ? StoneChallenge.hard_stone : Blocks.STONE;
 									event.world.setBlockState(pos, newBlock.getStateFromMeta(block.getMetaFromState(iblockstate)), 6 /*no block update, no re-render*/);
 									if (!shouldBeHard) {
 										event.world.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_CHORUS_FLOWER_DEATH, SoundCategory.BLOCKS, 1.0F, 1.0F);

@@ -6,7 +6,7 @@
  * Iberia is Open Source and distributed under the
  * CC-BY-NC-SA 4.0 License: https://creativecommons.org/licenses/by-nc-sa/4.0/
  */
- package com.gibraltar.iberia.world;
+package com.gibraltar.iberia.world;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -22,7 +22,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import com.gibraltar.iberia.blocks.BlockHardStone;
-import com.gibraltar.iberia.challenge.HardStoneChallenge;
+import com.gibraltar.iberia.challenge.StoneChallenge;
 
 public class HardStoneGenerator implements IWorldGenerator {
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
@@ -42,8 +42,8 @@ public class HardStoneGenerator implements IWorldGenerator {
                     Block block = state.getBlock();
 
                     if (block == Blocks.STONE && BlockHardStone.isSurroundedByCompressingBlocks(world, pos, true)) {
-                        IBlockState newBlockState = HardStoneChallenge.hard_stone.getStateFromMeta(block.getMetaFromState(state));
-                        world.setBlockState(pos, newBlockState, 6 /*no block update, no re-render*/);
+                        IBlockState newBlockState = StoneChallenge.hard_stone.getStateFromMeta(block.getMetaFromState(state));
+                        world.setBlockState(pos, newBlockState, 20 /*no block update, no observer checks*/);
                     }
                 }
             }            

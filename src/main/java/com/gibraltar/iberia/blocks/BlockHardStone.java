@@ -33,7 +33,7 @@ public class BlockHardStone extends BlockStone {
 	}
 
 	@Override
-    protected ItemStack createStackedBlock(IBlockState state)
+    protected ItemStack getSilkTouchDrop(IBlockState state)
     {
         Item item = Item.getItemFromBlock(Blocks.STONE);
 
