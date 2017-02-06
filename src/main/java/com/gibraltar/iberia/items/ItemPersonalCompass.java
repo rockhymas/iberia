@@ -146,7 +146,6 @@ public class ItemPersonalCompass extends Item {
 
         GameRegistry.register(this);
         GameRegistry.addRecipe(new ItemStack(this), " I ", "IRI", " I ", 'I', Items.IRON_INGOT, 'R', Items.REDSTONE);
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("iberia:compass_personal", "inventory"));
     }
 
     public static void setCompassSpawn(ItemStack stack, int x, int z) {

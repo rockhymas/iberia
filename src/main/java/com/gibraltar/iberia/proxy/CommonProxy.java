@@ -29,7 +29,7 @@ import net.minecraftforge.common.config.Property;
 public class CommonProxy {
 	public static Configuration config;
 	public static File configFile;
-    private ArrayList challenges;
+    protected ArrayList challenges;
 
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -72,7 +72,7 @@ public class CommonProxy {
         });
     }
 
-    private void forEachChallenge(Consumer<Challenge> action) {
+    protected void forEachChallenge(Consumer<Challenge> action) {
 	    challenges.forEach(action);
     }
 

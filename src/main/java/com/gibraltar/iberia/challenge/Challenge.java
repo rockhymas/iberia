@@ -29,6 +29,9 @@ public class Challenge {
 		}
 	}
 
+	public void preInitClient(FMLPreInitializationEvent event) {
+	}
+
 	public void init(FMLInitializationEvent event) {
 	}
 

@@ -8,6 +8,7 @@
  */
 package com.gibraltar.iberia.challenge;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,6 +27,7 @@ import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
@@ -57,6 +59,12 @@ public class NavigationChallenge extends Challenge {
 	}
 
     @Override
+	public void preInitClient(FMLPreInitializationEvent event) {
+		super.preInitClient(event);
+        ModelLoader.setCustomModelResourceLocation(compassPersonal, 0, new ModelResourceLocation("iberia:compass_personal", "inventory"));
+	}
+
+    @Override
     public boolean hasSubscriptions() {
 		return true;
 	}
@@ -71,8 +79,7 @@ public class NavigationChallenge extends Challenge {
     @SideOnly(Side.SERVER)
     public void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
         if (event.crafting.getItem() instanceof ItemPersonalCompass) {
-            BlockPos pos = event.player.getBedLocation(0);
-            pos = SpawnChallenge.getPlayerIberiaSpawn(event.player);
+            BlockPos pos = SpawnChallenge.getPlayerIberiaSpawn(event.player);
             ItemPersonalCompass.setCompassSpawn(event.crafting, pos.getX(), pos.getZ());
         }
     }
