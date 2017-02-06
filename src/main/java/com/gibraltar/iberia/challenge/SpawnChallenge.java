@@ -210,10 +210,11 @@ public class SpawnChallenge extends Challenge {
 
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        // TODO: may need to get rid of this
-        MinecraftServer server = event.player.getServer();
-        long i = server.worlds[0].getWorldInfo().getWorldTime() + 24000L;
-        setAllWorldTimes(server, i - i % 24000L);
+        if (event.player.world.playerEntities.size() == 1) {
+            MinecraftServer server = event.player.getServer();
+            long i = server.worlds[0].getWorldInfo().getWorldTime() + 24000L;
+            setAllWorldTimes(server, i - i % 24000L);
+        }
     }
 
     private void setAllWorldTimes(MinecraftServer server, long time)

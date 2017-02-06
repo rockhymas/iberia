@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import io.netty.buffer.ByteBuf;
 
+import com.gibraltar.iberia.challenge.SpawnChallenge;
 import com.gibraltar.iberia.items.ItemPersonalCompass;
 
 public class MessageGetPlayerSpawn implements IMessage, IMessageHandler<MessageGetPlayerSpawn, IMessage> {
@@ -38,7 +39,7 @@ public class MessageGetPlayerSpawn implements IMessage, IMessageHandler<MessageG
             public void run() {
                 ItemStack compass = getCompassWithoutSpawn(player);
                 if (compass != null) {
-                    BlockPos pos = player.getBedLocation(0);
+                    BlockPos pos = SpawnChallenge.getPlayerIberiaSpawn(player);
                     if (pos != null) {
                         ItemPersonalCompass.setCompassSpawn(compass, pos.getX(), pos.getZ());
                     }
