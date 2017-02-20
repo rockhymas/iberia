@@ -146,6 +146,7 @@ public class ItemPersonalCompass extends Item {
 
         GameRegistry.register(this);
         GameRegistry.addRecipe(new ItemStack(this), " I ", "IRI", " I ", 'I', Items.IRON_INGOT, 'R', Items.REDSTONE);
+        GameRegistry.addRecipe(new ItemStack(Items.MAP), "PPP", "PCP", "PPP", 'P', Items.PAPER, 'C', this);
     }
 
     public static void setCompassSpawn(ItemStack stack, int x, int z) {
