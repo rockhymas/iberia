@@ -312,7 +312,6 @@ public class ArmorChallenge extends Challenge {
     }
 
 	@SubscribeEvent
-    @SideOnly(Side.CLIENT)
 	public void onEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
 		if (!quickArmorSwapEnabled || event.getTarget().world.isRemote) {
 			return;
@@ -327,10 +326,10 @@ public class ArmorChallenge extends Challenge {
 		}
 
 		EntityArmorStand armorStand = (EntityArmorStand) event.getTarget();
+		EntityPlayer player = event.getEntityPlayer();
 		// Shift-right click to swap armor
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+		if (player.isSneaking()) {
 			event.setCanceled(true);
-			EntityPlayer player = event.getEntityPlayer();
 			for (EntityEquipmentSlot slot : slotsToSwap) {
 				ItemStack playerItem = player.getItemStackFromSlot(slot);
 				ItemStack armorStandItem = armorStand.getItemStackFromSlot(slot);
