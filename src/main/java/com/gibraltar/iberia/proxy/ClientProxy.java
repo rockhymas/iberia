@@ -11,6 +11,9 @@ package com.gibraltar.iberia.proxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
+    
+    private static final String[] DEFAULT_RESOURCE_PACKS = new String[] { "aB", "field_110449_ao", "defaultResourcePacks" };
+    
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -21,4 +24,17 @@ public class ClientProxy extends CommonProxy {
             }
         });
     }
+
+    @Override
+    public void hookResourceProxy() {
+        List<IResourcePack> packs = ReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), DEFAULT_RESOURCE_PACKS);
+        resourceProxy = new ResourceProxy();
+        packs.add(resourceProxy);
+    }
+
+    @Override
+    public void addResourceOverride(String space, String dir, String file, String ext) {
+        resourceProxy.addResource(space, dir, file, ext);
+    }
+
 }

@@ -8,9 +8,13 @@
  */
 package com.gibraltar.iberia.blocks;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockStone;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -18,24 +22,55 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import com.gibraltar.iberia.Reference;
 
-public class BlockHardStone extends BlockStone {
-	public BlockHardStone() {
-		super();
+public class BlockHardStone extends Block {
 
-        setHardness(1.5F);
-        setResistance(10.0F);
+    public static Block constructingBaseBlock;
+    public static BlockHardStone create(Block baseBlock) {
+
+		BlockHardStone.constructingBaseBlock = baseBlock;
+		BlockHardStone hard_stone = new BlockHardStone(baseBlock);
+		BlockHardStone.constructingBaseBlock = null;
+        return hard_stone;
+    }
+
+
+    private Block baseBlock;
+    private Block getBaseBlock() {
+        return baseBlock == null ? constructingBaseBlock : baseBlock;
+    }
+
+	public BlockHardStone(Block baseBlock) {
+		super(baseBlock.getMaterial(null));
+        this.baseBlock = baseBlock;
+
+        setHardness(baseBlock.getBlockHardness(null, null, null));
+        try {
+            setResistance((float)ReflectionHelper.findField(baseBlock.getClass(), new String[] { "w", "field_149781_w", "blockResistance" }).get(baseBlock));            
+        } catch (Exception e) {
+        }
         setUnlocalizedName("hardstone");
-        setRegistryName(Reference.MOD_PREFIX + "hardstone");
+        setRegistryName(Reference.MOD_PREFIX + "hard" + baseBlock.getUnlocalizedName());
 		GameRegistry.register(this);
 	}
+
+    @Override
+    public BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, getBaseBlock().getBlockState().getProperty("variant"));
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return ((Enum)state.getValue(getBaseBlock().getBlockState().getProperty("variant"))).ordinal();
+    }
 
 	@Override
     protected ItemStack getSilkTouchDrop(IBlockState state)
     {
-        Item item = Item.getItemFromBlock(Blocks.STONE);
+        Item item = Item.getItemFromBlock(baseBlock);
 
         if (item == null)
         {
@@ -47,15 +82,21 @@ public class BlockHardStone extends BlockStone {
 
             if (item.getHasSubtypes())
             {
-                i = this.getMetaFromState(state);
+                i = baseBlock.getMetaFromState(state);
             }
 
             return new ItemStack(item, 1, i);
         }
     }
 
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return baseBlock.getItemDropped(state, rand, fortune);
+    }
+
     public static boolean isCompressingBlock(Block block) {
-		return block instanceof BlockStone ||
+		return block instanceof BlockHardStone ||
+            block == Blocks.STONE ||
 			block == Blocks.BEDROCK ||
 			block == Blocks.DIRT ||
 			block == Blocks.SANDSTONE ||

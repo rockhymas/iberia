@@ -26,6 +26,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -54,7 +55,9 @@ public class StoneChallenge extends Challenge {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
-		hard_stone = new BlockHardStone();
+
+		Block block = (Block)Block.REGISTRY.getObject(new ResourceLocation("stone"));
+		hard_stone = BlockHardStone.create(block);
 
 		GameRegistry.registerWorldGenerator(new HardStoneGenerator(), 0);
 	}
@@ -148,7 +151,7 @@ public class StoneChallenge extends Challenge {
 							{
 								BlockPos pos = new BlockPos(k1 + j, i2 + extendedblockstorage.getYLocation(), l1 + k);
 								boolean hard = block == StoneChallenge.hard_stone;
-								boolean shouldBeHard = BlockHardStone.isSurroundedByCompressingBlocks(event.world, pos, false);
+								boolean shouldBeHard = block instanceof BlockHardStone ? ((BlockHardStone)block).isSurroundedByCompressingBlocks(event.world, pos, false) : false;
 
 								if (hard != shouldBeHard)
 								{
