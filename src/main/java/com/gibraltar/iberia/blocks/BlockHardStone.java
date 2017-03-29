@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -43,9 +44,15 @@ public class BlockHardStone extends Block {
         return baseBlock == null ? constructingBaseBlock : baseBlock;
     }
 
+    private IProperty getVariantProperty() {
+        return getBaseBlock().getBlockState().getProperty("variant");
+    }
+
 	public BlockHardStone(Block baseBlock) {
 		super(baseBlock.getMaterial(null));
         this.baseBlock = baseBlock;
+
+        this.setDefaultState(this.blockState.getBaseState().withProperty(getVariantProperty(), getBaseBlock().getDefaultState().getValue(getVariantProperty())));
 
         setHardness(baseBlock.getBlockHardness(null, null, null));
         try {
@@ -59,12 +66,18 @@ public class BlockHardStone extends Block {
 
     @Override
     public BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, getBaseBlock().getBlockState().getProperty("variant"));
+        return new BlockStateContainer(this, getVariantProperty());
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return ((Enum)state.getValue(getBaseBlock().getBlockState().getProperty("variant"))).ordinal();
+        return ((Enum)state.getValue(getVariantProperty())).ordinal();
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        Enum value = (Enum)getBaseBlock().getStateFromMeta(meta).getValue(getVariantProperty());
+        return getDefaultState().withProperty(getVariantProperty(), value);
     }
 
 	@Override
@@ -91,9 +104,14 @@ public class BlockHardStone extends Block {
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return baseBlock.getItemDropped(state, rand, fortune);
+        return baseBlock.getItemDropped(baseBlock.getStateFromMeta(getMetaFromState(state)), rand, fortune);
     }
 
+	@Override
+	public int damageDropped(IBlockState state) {
+		return getMetaFromState(state);
+	}
+    
     public static boolean isCompressingBlock(Block block) {
 		return block instanceof BlockHardStone ||
             block == Blocks.STONE ||
