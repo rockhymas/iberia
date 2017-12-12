@@ -20,6 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -30,10 +31,11 @@ import com.gibraltar.iberia.Reference;
 public class BlockHardStone extends Block {
 
     public static Block constructingBaseBlock;
-    public static BlockHardStone create(Block baseBlock) {
+    public static BlockHardStone create(String stone) {
 
-		BlockHardStone.constructingBaseBlock = baseBlock;
-		BlockHardStone hard_stone = new BlockHardStone(baseBlock);
+        Block baseBlock = (Block)Block.REGISTRY.getObject(new ResourceLocation(stone));
+        BlockHardStone.constructingBaseBlock = baseBlock;
+		BlockHardStone hard_stone = new BlockHardStone(baseBlock, stone);
 		BlockHardStone.constructingBaseBlock = null;
         return hard_stone;
     }
@@ -48,7 +50,7 @@ public class BlockHardStone extends Block {
         return getBaseBlock().getBlockState().getProperty("variant");
     }
 
-	public BlockHardStone(Block baseBlock) {
+	public BlockHardStone(Block baseBlock, String stone) {
 		super(baseBlock.getMaterial(null));
         this.baseBlock = baseBlock;
 
@@ -59,8 +61,8 @@ public class BlockHardStone extends Block {
             setResistance((float)ReflectionHelper.findField(baseBlock.getClass(), new String[] { "w", "field_149781_w", "blockResistance" }).get(baseBlock));            
         } catch (Exception e) {
         }
-        setUnlocalizedName("hardstone");
-        setRegistryName(Reference.MOD_PREFIX + "hard" + baseBlock.getUnlocalizedName());
+        setUnlocalizedName("hard" + stone);
+        setRegistryName(Reference.MOD_PREFIX + "hard" + stone);
 		GameRegistry.register(this);
 	}
 
@@ -111,7 +113,7 @@ public class BlockHardStone extends Block {
 	public int damageDropped(IBlockState state) {
 		return getMetaFromState(state);
 	}
-    
+
     public static boolean isCompressingBlock(Block block) {
 		return block instanceof BlockHardStone ||
             block == Blocks.STONE ||

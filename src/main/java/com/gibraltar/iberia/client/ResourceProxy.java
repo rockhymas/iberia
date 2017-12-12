@@ -8,13 +8,20 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.AbstractResourcePack;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.FMLLog;
+
+import com.gibraltar.iberia.iberia;
 
 public class ResourceProxy extends AbstractResourcePack {
 
-	private static final String MINECRAFT = "minecraft";
-	private static final Set<String> RESOURCE_DOMAINS = ImmutableSet.of(MINECRAFT);
+	private static final String IBERIA = "iberia";
+	private static final Set<String> RESOURCE_DOMAINS = ImmutableSet.of(IBERIA);
 
 	private static final String BARE_FORMAT = "assets/%s/%s/%s/%s.%s";
 	private static final String OVERRIDE_FORMAT = "/assets/%s/%s/%s/overrides/%s.%s";
@@ -24,12 +31,6 @@ public class ResourceProxy extends AbstractResourcePack {
 	public ResourceProxy() {
 		super(Loader.instance().activeModContainer().getSource());
 		overrides.put("pack.mcmeta", "/proxypack.mcmeta");
-	}
-
-	public void addResource(String space, String dir, String file, String ext) {
-		String bare = String.format(BARE_FORMAT, MINECRAFT, space, dir, file, ext);
-		String override = String.format(OVERRIDE_FORMAT, LibMisc.MOD_ID, space, dir, file, ext);
-		overrides.put(bare, override);
 	}
 
 	@Override
@@ -42,13 +43,65 @@ public class ResourceProxy extends AbstractResourcePack {
 		if(name == null)
 			return null;
 		
-		String file = overrides.get(name);
-		return Quark.class.getResourceAsStream(overrides.get(name));
+        FMLLog.info(name);
+        if (name.startsWith("assets/iberia/blockstates/") && name.endsWith(".json")) {
+            FMLLog.info("prefix match");
+            String originalName = name.substring(26, name.length() - 5);
+            FMLLog.info(originalName);
+            String rl = "blockstates/" + originalName + ".json";
+            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+            FMLLog.info("manager " + manager);
+            ResourceLocation location = new ResourceLocation(rl);
+            FMLLog.info("location: " + location);
+            IResource resource = null;
+            try {
+                resource = manager.getResource(location);
+            }
+            catch (Exception e) {
+                FMLLog.info("exception: " + e);
+            }
+            FMLLog.info("resource: " + resource);
+            InputStream stream = resource.getInputStream();
+            FMLLog.info("stream: " + stream);
+            FMLLog.info("available: " + stream.available());
+            return stream;
+        }
+        else if (name.startsWith("assets/iberia/lang/en_us.lang")) {
+            return iberia.class.getResourceAsStream("assets/iberia/lang/en_US.lang");
+        }
+        else if (name.startsWith("assets/iberia/models/block/") && name.endsWith(".json")) {
+            FMLLog.info("prefix match");
+            String originalName = name.substring(27, name.length() - 5);
+            FMLLog.info(originalName);
+            String rl = "models/block/" + originalName + ".json";
+            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+            FMLLog.info("manager " + manager);
+            ResourceLocation location = new ResourceLocation(rl);
+            FMLLog.info("location: " + location);
+            IResource resource = null;
+            try {
+                resource = manager.getResource(location);
+            }
+            catch (Exception e) {
+                FMLLog.info("exception: " + e);
+            }
+            FMLLog.info("resource: " + resource);
+            InputStream stream = resource.getInputStream();
+            FMLLog.info("stream: " + stream);
+            FMLLog.info("available: " + stream.available());
+            return stream;
+        }
+
+        return null;
 	}
 
 	@Override
 	protected boolean hasResourceName(String name) {
-		return overrides.containsKey(name);
+        FMLLog.info(name);
+        if (name.startsWith("assets/iberia") && !name.startsWith("assets/iberia/lang/")) {
+            return true;
+        }
+		return false;
 	}
 
 	@Override

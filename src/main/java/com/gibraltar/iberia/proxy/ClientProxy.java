@@ -8,12 +8,20 @@
  */
 package com.gibraltar.iberia.proxy;
 
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import com.gibraltar.iberia.client.ResourceProxy;
 
 public class ClientProxy extends CommonProxy {
     
     private static final String[] DEFAULT_RESOURCE_PACKS = new String[] { "aB", "field_110449_ao", "defaultResourcePacks" };
-    
+    ResourceProxy resourceProxy;
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -31,10 +39,4 @@ public class ClientProxy extends CommonProxy {
         resourceProxy = new ResourceProxy();
         packs.add(resourceProxy);
     }
-
-    @Override
-    public void addResourceOverride(String space, String dir, String file, String ext) {
-        resourceProxy.addResource(space, dir, file, ext);
-    }
-
 }

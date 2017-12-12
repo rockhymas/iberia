@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -32,6 +33,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.ConfigCategory; 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -56,8 +58,10 @@ public class StoneChallenge extends Challenge {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 
-		Block block = (Block)Block.REGISTRY.getObject(new ResourceLocation("stone"));
-		hard_stone = BlockHardStone.create(block);
+		String stone = "stone";
+		hard_stone = BlockHardStone.create(stone);
+
+		ModelLoader.setCustomStateMapper(hard_stone, (new StateMap.Builder()).withName(BlockStone.VARIANT).build());
 
 		GameRegistry.registerWorldGenerator(new HardStoneGenerator(), 0);
 	}

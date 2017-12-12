@@ -33,6 +33,8 @@ public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event)
     {
+        hookResourceProxy();
+
         configFile = event.getSuggestedConfigurationFile();
         System.out.println(configFile);
 		config = new Configuration(configFile);
@@ -86,5 +88,8 @@ public class CommonProxy {
         }
 
         return enabled;
+    }
+
+    public void hookResourceProxy() {
     }
 }
