@@ -49,6 +49,7 @@ import com.gibraltar.iberia.world.HardStoneGenerator;
 
 public class StoneChallenge extends Challenge {
 	public static Block hard_stone;
+	public static boolean slowdown_enabled;
 	Map<String, Float> slowdowns;
 	
 	@Override
@@ -68,6 +69,8 @@ public class StoneChallenge extends Challenge {
         prop = config.get(name, "IronSlowdown", 10.0D);
         prop = config.get(name, "GoldSlowdown", 1.0D);
         prop = config.get(name, "DiamondSlowdown", 2.0D);
+        prop = config.get(name, "SlowdownEnabled", true);
+        slowdown_enabled = prop.getBoolean(); 
 
 		slowdowns = new TreeMap<String, Float>();
 		ConfigCategory category = config.getCategory(name);
@@ -90,7 +93,7 @@ public class StoneChallenge extends Challenge {
 
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-		if (event.getState().getBlock() != StoneChallenge.hard_stone) {
+		if (event.getState().getBlock() != StoneChallenge.hard_stone || slowdown_enabled == false) {
 			return;
 		}
 
