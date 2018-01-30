@@ -8,36 +8,26 @@
  */
 package com.gibraltar.iberia.items;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.Thread;
-import java.util.List;
 import java.util.HashMap;
 import javax.annotation.Nullable;
 
-import com.gibraltar.iberia.challenge.NavigationChallenge;
 import com.gibraltar.iberia.network.MessageRegistry;
 import com.gibraltar.iberia.network.MessageGetPlayerSpawn;
 import com.gibraltar.iberia.Reference;
@@ -45,9 +35,9 @@ import com.gibraltar.iberia.Reference;
 public class ItemPersonalCompass extends Item {
 
     private class WobbleData {
-        public double rotation;
-        public double rota;
-        public long lastUpdateTick;
+        private double rotation;
+        private double rota;
+        private long lastUpdateTick;
     }
 
     public ItemPersonalCompass() {
@@ -76,19 +66,13 @@ public class ItemPersonalCompass extends Item {
                     }
 
                     if (worldIn.provider.isSurfaceWorld()) {
-                        if (destinationPos != null) {
-                            double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
-                            d1 = d1 % 360.0D;
-                            double d2 = getPosToAngle(worldIn, entity, destinationPos);
-                            d0 = Math.PI - ((d1 - 90.0D) * 0.01745329238474369D - d2);
-                        } else {
-                            d0 = Math.random() * (Math.PI * 2D);
-                        }
+                    	double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
+                    	d1 = d1 % 360.0D;
+                    	double d2 = getPosToAngle(worldIn, entity, destinationPos);
+                    	d0 = Math.PI - ((d1 - 90.0D) * 0.01745329238474369D - d2);
                     }
                     else {
                         d0 = (Math.random() - 0.5D) * 2D * Math.PI;
-                        // double d1 = flag ? (double) entity.rotationYaw : getFrameRotation((EntityItemFrame) entity);
-                        // d0 = Math.PI - (d1 % 360) / 360D * Math.PI * 2D;
                         flag = false;
                     }
 
@@ -104,7 +88,7 @@ public class ItemPersonalCompass extends Item {
             @SideOnly(Side.CLIENT)
             private double wobble(World world, double angle, BlockPos destinationPos) {
                 if (wobbleData == null) {
-                    wobbleData = new HashMap<BlockPos, WobbleData>();
+                    wobbleData = new HashMap<>();
                 }
 
                 WobbleData w;
@@ -131,7 +115,7 @@ public class ItemPersonalCompass extends Item {
 
             @SideOnly(Side.CLIENT)
             private double getFrameRotation(EntityItemFrame itemFrame) {
-                return (double) MathHelper.clampAngle(180 + itemFrame.facingDirection.getHorizontalIndex() * 90);
+                return (double) MathHelper.wrapDegrees(180 + itemFrame.facingDirection.getHorizontalIndex() * 90);
             }
 
             @SideOnly(Side.CLIENT)
@@ -143,10 +127,7 @@ public class ItemPersonalCompass extends Item {
         setUnlocalizedName("compass_personal");
         setCreativeTab(CreativeTabs.TOOLS);
         setRegistryName(Reference.MOD_PREFIX + "compass_personal");
-
-        GameRegistry.register(this);
-        GameRegistry.addRecipe(new ItemStack(this), " I ", "IRI", " I ", 'I', Items.IRON_INGOT, 'R', Items.REDSTONE);
-        GameRegistry.addRecipe(new ItemStack(Items.MAP), "PPP", "PCP", "PPP", 'P', Items.PAPER, 'C', this);
+        ForgeRegistries.ITEMS.register(this);
     }
 
     public static void setCompassSpawn(ItemStack stack, int x, int z) {

@@ -10,12 +10,11 @@ package com.gibraltar.iberia.challenge;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemCompass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -26,11 +25,9 @@ import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -38,24 +35,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.RegistryManager;
 
 import com.gibraltar.iberia.items.ItemPersonalCompass;
 import com.gibraltar.iberia.challenge.SpawnChallenge;
-import com.gibraltar.iberia.network.MessageRegistry;
-import com.gibraltar.iberia.network.MessageGetPlayerSpawn;
 import com.gibraltar.iberia.Reference;
 
 public class NavigationChallenge extends Challenge {	
-    public static Item compassPersonal;
+    private static Item compassPersonal;
 
     @Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		compassPersonal = new ItemPersonalCompass();
+		RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(new ResourceLocation("minecraft:compass"));
 	}
 
     @Override
@@ -160,13 +154,10 @@ public class NavigationChallenge extends Challenge {
         if (pool == null) {
             pool = loot.getPool("pool0");
         }
-        boolean modified = false;
-        Gson gson = new Gson();
         for (; pool != null; pool = loot.getPool("pool" + i)) {
             LootEntry entry = pool.getEntry("minecraft:compass");
             if (entry != null) {
                 FMLLog.info("found compass entry");
-                modified = true;
 
                 pool.removeEntry("minecraft:compass");
                 LootEntry newEntry = new LootEntryItem(compassPersonal, 1, 0, new LootFunction[0], new LootCondition[0], Reference.MODID + ":compass_personal");

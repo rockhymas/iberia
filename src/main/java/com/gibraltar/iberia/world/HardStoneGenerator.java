@@ -8,15 +8,14 @@
  */
 package com.gibraltar.iberia.world;
 
-import java.util.Iterator;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -42,7 +41,7 @@ public class HardStoneGenerator implements IWorldGenerator {
                     Block block = state.getBlock();
 
                     if (block == Blocks.STONE && BlockHardStone.isSurroundedByCompressingBlocks(world, pos, true)) {
-                        IBlockState newBlockState = StoneChallenge.hard_stone.getStateFromMeta(block.getMetaFromState(state));
+                        IBlockState newBlockState = StoneChallenge.hardStone.getStateFromMeta(block.getMetaFromState(state));
                         world.setBlockState(pos, newBlockState, 20 /*no block update, no observer checks*/);
                     }
                 }

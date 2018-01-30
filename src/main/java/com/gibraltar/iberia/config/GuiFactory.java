@@ -10,6 +10,7 @@
 package com.gibraltar.iberia.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,18 +32,8 @@ public class GuiFactory implements IModGuiFactory {
 	}
 
 	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return IberiaGuiConfig.class;
-	}
-
-	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-		return null;
-	}
-
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-		return null;
+		return Collections.emptySet();
 	}
 
 	public static class IberiaGuiConfig extends GuiConfig {
@@ -62,6 +53,16 @@ public class GuiFactory implements IModGuiFactory {
 			return list;
 		}
 
+	}
+
+	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new IberiaGuiConfig(parentScreen);
 	}
 
 }

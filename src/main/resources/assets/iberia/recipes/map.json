@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "minecraft:map"
+  },
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:paper",
+      "data": 0
+    },
+	"C": {
+      "item": "iberia:compass_personal",
+      "data": 0
+    }
+  }
+}
