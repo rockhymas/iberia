@@ -8,16 +8,12 @@
  */
 package com.gibraltar.iberia.challenge;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiHopper;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,12 +22,11 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiScreenHorseInventory;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -39,45 +34,29 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.enchanting.EnchantmentLevelSetEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.gibraltar.iberia.blocks.BlockHardStone;
-import com.gibraltar.iberia.Reference;
 
 public class ArmorChallenge extends Challenge {
 	private static final UUID ARMOR_SPEED_SLOWDOWN_ID = UUID.fromString("26265dd9-6ebf-4b88-8876-81f338f4eaa5");
@@ -111,11 +90,6 @@ public class ArmorChallenge extends Challenge {
         slotsToSwap[3] = EntityEquipmentSlot.LEGS;
         slotsToSwap[4] = EntityEquipmentSlot.FEET;
     }
-
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		super.preInit(event);
-	}
 
 	@Override
 	public boolean hasSubscriptions() {
@@ -216,7 +190,6 @@ public class ArmorChallenge extends Challenge {
 		}
 
 		double visibility = (Minecraft.getSystemTime() - timeGuiOpened) / (double)armorDelayMs;
-		int alpha = (int)Math.round(64.0D - visibility * 64.0D);
 
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
@@ -224,7 +197,7 @@ public class ArmorChallenge extends Challenge {
 		GlStateManager.enableBlend();
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		int guiWidth = event.getGui().width;
 		int guiHeight = event.getGui().height;
 		int guiDrawnHeight = guiDrawnHeight((GuiContainer)event.getGui());
@@ -302,7 +275,7 @@ public class ArmorChallenge extends Challenge {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
+	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
         renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
         renderer.pos((double)(x + 0), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
@@ -341,10 +314,10 @@ public class ArmorChallenge extends Challenge {
 		else {
 			boolean isSmall = armorStand.isSmall();
 			Vec3d vec = event.getLocalPos();
-			double d4 = isSmall ? vec.yCoord * 2.0D : vec.yCoord;
+			double d4 = isSmall ? vec.y * 2.0D : vec.y;
 			ItemStack stack = event.getItemStack();
 
-			if (stack == null || !(stack.getItem() instanceof ItemElytra) || event.getHand() != EnumHand.MAIN_HAND) {
+			if (stack.isEmpty() || !(stack.getItem() instanceof ItemElytra) || event.getHand() != EnumHand.MAIN_HAND) {
 				return;
 			}
 
@@ -440,7 +413,7 @@ public class ArmorChallenge extends Challenge {
 
 	@SubscribeEvent
 	public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		boolean itemIsBlock = event.getItemStack() != null && event.getItemStack().getItem() instanceof ItemBlock;
+		boolean itemIsBlock = !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemBlock;
 		if (event.getEntityPlayer().onGround || !itemIsBlock) {
 			return;
 		}
@@ -471,7 +444,7 @@ public class ArmorChallenge extends Challenge {
 					return;
 				}
 
-				event.setNewSpeed(event.getOriginalSpeed() / heldItemStack.getStrVsBlock(event.getState()));
+				event.setNewSpeed(event.getOriginalSpeed() / heldItemStack.getDestroySpeed(event.getState()));
 			}
 		}
 

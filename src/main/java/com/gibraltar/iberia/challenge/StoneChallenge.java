@@ -100,13 +100,13 @@ public class StoneChallenge extends Challenge {
 		}
 
 		ItemPickaxe pickaxe = (ItemPickaxe)heldItemStack.getItem();
-		String material = pickaxe.getToolMaterial().toString().toLowerCase();
+		String material = pickaxe.getToolMaterialName().toLowerCase();
 		float slowdown = 10.0F;
 		if (slowdowns.containsKey(material)) {
 			slowdown = slowdowns.get(material);
 		}
 		else {
-			FMLLog.info("[Iberia] New pickaxe type: %s", pickaxe.getToolMaterial());
+			FMLLog.info("[Iberia] New pickaxe type: %s", pickaxe.getToolMaterialName());
 		}
 
 		event.setNewSpeed(event.getOriginalSpeed() / slowdown);
@@ -128,8 +128,8 @@ public class StoneChallenge extends Challenge {
 			while (iterator.hasNext())
 			{
 				Chunk chunk = (Chunk)iterator.next();
-				int j = chunk.xPosition * 16;
-				int k = chunk.zPosition * 16;
+				int j = chunk.x * 16;
+				int k = chunk.z * 16;
 				for (ExtendedBlockStorage extendedblockstorage : chunk.getBlockStorageArray())
 				{
 					if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE && !extendedblockstorage.isEmpty())

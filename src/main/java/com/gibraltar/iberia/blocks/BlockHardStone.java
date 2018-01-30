@@ -17,7 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import com.gibraltar.iberia.Reference;
 
@@ -29,7 +29,7 @@ public class BlockHardStone extends BlockStone {
         setResistance(10.0F);
         setUnlocalizedName("hardstone");
         setRegistryName(Reference.MOD_PREFIX + "hardstone");
-		GameRegistry.register(this);
+        ForgeRegistries.BLOCKS.register(this);
 	}
 
 	@Override

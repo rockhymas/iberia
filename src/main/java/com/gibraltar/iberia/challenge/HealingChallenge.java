@@ -14,13 +14,9 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.FMLLog;
 
 import com.gibraltar.iberia.challenge.SleepChallenge;
-import com.gibraltar.iberia.Reference;
 import com.gibraltar.iberia.iberia;
 
 public class HealingChallenge extends Challenge {
@@ -70,6 +66,10 @@ public class HealingChallenge extends Challenge {
                     case EASY:
                         player.heal(healAmountEasy);
                         break;
+				case PEACEFUL:
+					break;
+				default:
+					break;
                 }
             }
         }

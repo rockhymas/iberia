@@ -18,12 +18,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.DamageSource;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -36,9 +34,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
@@ -118,6 +113,10 @@ public class SpawnChallenge extends Challenge {
             case EASY:
                 distanceToNewSpawn = distanceToNewSpawnEasy;
                 break;
+		case PEACEFUL:
+			break;
+		default:
+			break;
         }
 
         return distanceToNewSpawn;
