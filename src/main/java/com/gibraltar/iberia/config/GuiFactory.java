@@ -30,18 +30,10 @@ public class GuiFactory implements IModGuiFactory {
 	public void initialize(Minecraft instance) {
 	}
 
-	@Override
-	public Class<? extends GuiScreen> mainConfigGuiClass() {
-		return IberiaGuiConfig.class;
-	}
+
 
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-		return null;
-	}
-
-	@Override
-	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
 		return null;
 	}
 
@@ -62,6 +54,16 @@ public class GuiFactory implements IModGuiFactory {
 			return list;
 		}
 
+	}
+
+	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return new IberiaGuiConfig(parentScreen);
 	}
 
 }
