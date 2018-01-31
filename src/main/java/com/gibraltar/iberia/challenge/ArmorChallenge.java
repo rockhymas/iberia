@@ -194,7 +194,7 @@ public class ArmorChallenge extends Challenge {
 		int guiWidth = event.getGui().width;
 		int guiHeight = event.getGui().height;
 		int guiDrawnHeight = guiDrawnHeight((GuiContainer)event.getGui());
-		int guiDrawnWidth = guiDrawnWidth(event.getGui());
+		int guiDrawnWidth = guiDrawnWidth((GuiContainer)event.getGui());
 		int guiLeft = (guiWidth - guiDrawnWidth) / 2;
 		int guiTop = (guiHeight - guiDrawnHeight) / 2;
 		this.draw(vertexbuffer, guiLeft, guiTop, guiDrawnWidth, guiDrawnHeight, 255, 255, 255, 128);
@@ -249,8 +249,8 @@ public class ArmorChallenge extends Challenge {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private int guiDrawnWidth(GuiScreen gui) {
-		return gui.width;
+	private int guiDrawnWidth(GuiContainer gui) {
+		return gui.getXSize();
 	}
 
 	@SideOnly(Side.CLIENT)
