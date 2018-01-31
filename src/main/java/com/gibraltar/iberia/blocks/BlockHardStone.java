@@ -39,7 +39,7 @@ public class BlockHardStone extends BlockStone {
 
         if (item == null)
         {
-            return null;
+            return ItemStack.EMPTY;
         }
         else
         {

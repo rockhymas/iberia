@@ -24,17 +24,15 @@ import com.gibraltar.iberia.network.MessageRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 public class CommonProxy {
 	public static Configuration config;
-	public static File configFile;
+	private static File configFile;
     protected ArrayList challenges;
 
     public void preInit(FMLPreInitializationEvent event)
     {
         configFile = event.getSuggestedConfigurationFile();
-        System.out.println(configFile);
 		config = new Configuration(configFile);
 		config.load();
 

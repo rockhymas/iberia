@@ -102,24 +102,24 @@ public class SpawnChallenge extends Challenge {
     }
 
     private int getDistanceToNextSpawn(World world) {
-        int distanceToNewSpawn = 0;
-        switch (world.getDifficulty()) {
-            case HARD:
-                distanceToNewSpawn = distanceToNewSpawnHard;
-                break;
-            case NORMAL:
-                distanceToNewSpawn = distanceToNewSpawnNormal;
-                break;
-            case EASY:
-                distanceToNewSpawn = distanceToNewSpawnEasy;
-                break;
-		case PEACEFUL:
-			break;
-		default:
-			break;
-        }
+    	int distanceToNewSpawn = 0;
+    	switch (world.getDifficulty()) {
+    	case HARD:
+    		distanceToNewSpawn = distanceToNewSpawnHard;
+    		break;
+    	case NORMAL:
+    		distanceToNewSpawn = distanceToNewSpawnNormal;
+    		break;
+    	case EASY:
+    		distanceToNewSpawn = distanceToNewSpawnEasy;
+    		break;
+    	case PEACEFUL:
+    		break;
+    	default:
+    		break;
+    	}
 
-        return distanceToNewSpawn;
+    	return distanceToNewSpawn;
     }
 
     private BlockPos findNextSpawnPoint(WorldProvider worldProvider, World world, BlockPos from, BlockPos awayFrom, int distance) {
@@ -183,15 +183,15 @@ public class SpawnChallenge extends Challenge {
         }
         else
         {
-            System.out.println("Unable to find spawn biome");
+        	FMLLog.warning("Unable to find spawn biome");
         }
 
         int l = 0;
 
         while (!worldProvider.canCoordinateBeSpawn(i, k))
         {
-            i += random.nextInt(64) - random.nextInt(64);
-            k += random.nextInt(64) - random.nextInt(64);
+            i += 64 * random.nextGaussian();
+            k += 64 * random.nextGaussian();
             ++l;
 
             if (l == 1000)

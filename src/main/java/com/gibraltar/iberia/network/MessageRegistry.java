@@ -15,6 +15,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.gibraltar.iberia.Reference;
 
 public class MessageRegistry {
+	
+	private MessageRegistry() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	
     public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID);
 
 	private static int i = 0;

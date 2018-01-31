@@ -10,10 +10,10 @@
 package com.gibraltar.iberia.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.IModGuiFactory;
@@ -24,17 +24,11 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import com.gibraltar.iberia.Reference;
 import com.gibraltar.iberia.proxy.CommonProxy;
 
-public class GuiFactory implements IModGuiFactory {
-
-	@Override
-	public void initialize(Minecraft instance) {
-	}
-
-
+public abstract class GuiFactory implements IModGuiFactory {
 
 	@Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-		return null;
+		return Collections.emptySet();
 	}
 
 	public static class IberiaGuiConfig extends GuiConfig {
