@@ -57,7 +57,7 @@ public class StoneChallenge extends Challenge {
 	public void loadConfig(Configuration config) {
 		super.loadConfig(config);
 
-		//what even is going on here?
+		
 		Property prop = config.get(name, "WoodSlowdown", 10.0D);
         prop = config.get(name, "StoneSlowdown", 10.0D);
         prop = config.get(name, "IronSlowdown", 10.0D);

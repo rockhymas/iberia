@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemCompass;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -34,6 +35,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.RegistryManager;
 
 import com.gibraltar.iberia.items.ItemPersonalCompass;
 import com.gibraltar.iberia.challenge.SpawnChallenge;
@@ -46,6 +49,7 @@ public class NavigationChallenge extends Challenge {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		compassPersonal = new ItemPersonalCompass();
+		RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(new ResourceLocation("minecraft:compass"));
 	}
 
     @Override
