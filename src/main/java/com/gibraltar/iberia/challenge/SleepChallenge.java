@@ -17,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
@@ -25,13 +24,9 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.gibraltar.iberia.world.IberiaWorldData;
 import com.gibraltar.iberia.Reference;
@@ -81,7 +76,7 @@ public class SleepChallenge extends Challenge {
         long time = server.worlds[0].getWorldInfo().getWorldTime();
 
         if (!player.world.isDaytime() && hasPlayerSleptTonight(player, time)) {
-            player.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.alreadySlept", new Object[0]), true);
+            player.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.alreadySlept", 0), true);
             event.setResult(EntityPlayer.SleepResult.OTHER_PROBLEM);
         }
         setPlayerSleptWell(player, checkIfPlayerSleptWell(player, event.getPos()));
@@ -89,11 +84,7 @@ public class SleepChallenge extends Challenge {
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.side == Side.CLIENT || event.phase == TickEvent.Phase.END) {
-            return;
-        }
-
-        if (event.world.isDaytime()) {
+        if (event.side == Side.CLIENT || event.phase == TickEvent.Phase.END || event.world.isDaytime()) {
             return;
         }
 
@@ -147,10 +138,10 @@ public class SleepChallenge extends Challenge {
                         entityplayer.wakeUpPlayer(false, false, true);
                         if (!allSleptWell) {
                             if (getPlayerSleptWell(entityplayer)) {
-                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.badDream", new Object[0]), true);
+                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.badDream", 0), true);
                             }
                             else {
-                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.wokenByZombies", new Object[0]), true);
+                                entityplayer.sendStatusMessage(new TextComponentTranslation("iberia.tile.bed.wokenByZombies", 0), true);
                             }
                         }
                     }
@@ -176,7 +167,6 @@ public class SleepChallenge extends Challenge {
             for (int j = -3; j <= 3 && !spawnableBlock; j++)
                 for (int k = -5; k <= 5 && !spawnableBlock; k++) {
                     BlockPos checkPos = pos.add(i, j, k);
-                    IBlockState state = player.world.getBlockState(checkPos);
                     BlockPos belowPos = checkPos.down();
                     IBlockState stateBelow = player.world.getBlockState(belowPos);
                     if (player.world.getLightFor(EnumSkyBlock.BLOCK, checkPos) < 8 &&

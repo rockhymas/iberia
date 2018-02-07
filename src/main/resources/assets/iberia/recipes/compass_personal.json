@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "iberia:compass_personal"
+  },
+  "pattern": [
+    " I ",
+    "IRI",
+    " I "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+	"R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}
